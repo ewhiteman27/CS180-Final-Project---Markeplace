@@ -1,9 +1,7 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Seller extends Product{
-
     User username = new User();
     String user = username.getUsername();
     public Seller (String productName, String storeName, String productDescription, int productQuantity, double productPrice, String user) {

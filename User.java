@@ -43,8 +43,8 @@ public class User {
         this.accountType = 0;
     }
 
-    public User createAccount(String username , String email , String password , int accountType)
-            throws InvalidUsernameException , InvalidEmailException , InvalidPasswordException {
+    public User createAccount(String username, String email, String password, int accountType)
+            throws InvalidUsernameException, InvalidEmailException, InvalidPasswordException, IOException {
         /**
          * First confirms that the parameters given for the account details do not match
          * an already existing account. If the account details do not match an already
@@ -73,7 +73,7 @@ public class User {
         return new User(username , email , password , accountType);
     }
 
-    public User logIn(String username , String password) throws InvalidLogInException {
+    public User logIn(String username , String password) throws InvalidLogInException, IOException {
         /**
          * looks through list of accounts and, if any account has a matching username
          * and password to those provided, returns a User object with the attributes
@@ -90,7 +90,7 @@ public class User {
         throw new InvalidLogInException("The username and password entered is invalid.");
     }
 
-    private ArrayList<String> getAccounts() {
+    private ArrayList<String> getAccounts() throws IOException {
         /**
          * reads the accounts.txt file and returns an arraylist
          * with the information of every user account in the file.
@@ -98,7 +98,6 @@ public class User {
 
         File f = new File("accounts.txt");
         ArrayList<String> accounts = new ArrayList<String>();
-        try {
             f.createNewFile();
             FileReader fr = new FileReader(f);
             BufferedReader bfr = new BufferedReader(fr);
@@ -111,9 +110,6 @@ public class User {
             }
             bfr.close();
             fr.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         return accounts;
     }
 
@@ -162,7 +158,7 @@ public class User {
         }
     }
 
-    public boolean changeUsername(String newUsername , String password , String email) {
+    public boolean changeUsername(String newUsername , String password , String email) throws IOException {
         /**
          * changes the username associated with the account to a new username.
          * the given new username must not be already taken and the user must
@@ -191,7 +187,7 @@ public class User {
         return false;
     }
 
-    public boolean changeEmail(String newEmail , String username , String password) {
+    public boolean changeEmail(String newEmail , String username , String password) throws IOException {
         /**
          * changes the email associated with the account to a new email address.
          * the given new email must not be already in use and the user must
@@ -220,7 +216,8 @@ public class User {
         return false;
     }
 
-    public boolean changePassword(String newPassword , String username , String email) throws InvalidPasswordException {
+    public boolean changePassword(String newPassword , String username , String email)
+            throws InvalidPasswordException, IOException {
         /**
          * changes the password associated with the account to a new password.
          * the given new email must not be already in use and the user must
@@ -247,7 +244,7 @@ public class User {
         return false;
     }
 
-    public boolean deleteAccount(String username , String password) {
+    public boolean deleteAccount(String username , String password) throws IOException {
         /**
          * deletes the account associated with this User object by setting
          * all fields to null and removing the account from the accounts.txt file.
