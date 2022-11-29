@@ -27,34 +27,48 @@ public class Client {
             String choice = (String) JOptionPane.showInputDialog(null,
                     "Please select one of the available options", "Market",
                     JOptionPane.QUESTION_MESSAGE, null, createLogIn, createLogIn[0]);
-            send.write(choice);
-            send.println();
+            send.println(choice);
             send.flush();
 
             if (choice.equals(createLogIn[0])) {
                 String[] buySellOption = new String[2];
                 buySellOption[0] = "Buyer";
                 buySellOption[1] = "Seller";
+                boolean hasTheAccountBeenCreated = false;
+                do {
 
-                String username = (String) JOptionPane.showInputDialog(null, "Please enter a Username", "Market", JOptionPane.INFORMATION_MESSAGE);
-                send.write(username);
-                send.println();
-                send.flush();
+                    String username = (String) JOptionPane.showInputDialog(null, "Please enter a Username", "Market", JOptionPane.INFORMATION_MESSAGE);
+                    send.println(username);
+                    send.flush();
 
-                String password = (String) JOptionPane.showInputDialog(null, "Please enter a Password", "Market", JOptionPane.INFORMATION_MESSAGE);
-                send.write(password);
-                send.println();
-                send.flush();
+                    String password = (String) JOptionPane.showInputDialog(null, "Please enter a Password", "Market", JOptionPane.INFORMATION_MESSAGE);
+                    send.println(password);
+                    send.flush();
 
-                String email = (String) JOptionPane.showInputDialog(null, "Please enter a Email", "Market", JOptionPane.INFORMATION_MESSAGE);
-                send.write(email);
-                send.println();
-                send.flush();
+                    String email = (String) JOptionPane.showInputDialog(null, "Please enter a Email", "Market", JOptionPane.INFORMATION_MESSAGE);
+                    send.println(email);
+                    send.flush();
 
-                String buyerSeller = (String) JOptionPane.showInputDialog(null, "Will you be using this application as a seller or a buyer?", "Market", JOptionPane.INFORMATION_MESSAGE, null, buySellOption, buySellOption[0]);
-                send.write(buyerSeller);
-                send.println();
-                send.flush();
+                    String buyerSeller = (String) JOptionPane.showInputDialog(null, "Will you be using this application as a seller or a buyer?", "Market", JOptionPane.INFORMATION_MESSAGE, null, buySellOption, buySellOption[0]);
+                    send.println(buyerSeller);
+                    send.flush();
+                    //Sender 01
+
+
+                    String xORy = receive.readLine(); // writer of 45/48
+                    System.out.println(xORy);
+                    if (xORy.equalsIgnoreCase("x")) {
+                        JOptionPane.showMessageDialog(null, "Error! One of your credentials was invalid. Please try again.", "Market", JOptionPane.ERROR_MESSAGE);
+                    }
+                    if (xORy.equalsIgnoreCase("y")) {
+                        hasTheAccountBeenCreated = true;
+                    }
+
+
+
+                } while (hasTheAccountBeenCreated == false);
+
+
 
 
 
@@ -72,4 +86,3 @@ public class Client {
 
     }
 }
-
