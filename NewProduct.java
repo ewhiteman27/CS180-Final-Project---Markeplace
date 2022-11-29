@@ -46,4 +46,43 @@ public class NewProduct {
         pw.close();
         fw.close();
     }
+
+    public ArrayList<String> getCart() throws IOException {
+        File f = new File("cart.txt");
+        ArrayList<String> cart = new ArrayList<String>();
+        f.createNewFile();
+        FileReader fr = new FileReader(f);
+        BufferedReader bfr = new BufferedReader(fr);
+        String line = bfr.readLine();
+        while (line != null) {
+            if (line.split(",").length == 6) {
+                cart.add(line);
+            }
+        }
+        bfr.close();
+        fr.close();
+        return cart;
+    }
+
+    public void writeCart(ArrayList<String> cart) throws IOException {
+        File f = new File("cart.txt");
+        FileWriter fw = new FileWriter(f, false);
+        PrintWriter pw = new PrintWriter(fw);
+        for (int i = 0; i < cart.size(); i++) {
+            pw.println(cart.get(i));
+        }
+        pw.close();
+        fw.close();
+    }
+
+    public void writeBuy(ArrayList<String> buy) throws IOException {
+        File f = new File("buyLog.txt");
+        FileWriter fw = new FileWriter(f, true);
+        PrintWriter pw = new PrintWriter(fw);
+        for (int i = 0; i < buy.size(); i++) {
+            pw.println(buy.get(i));
+        }
+        pw.close();
+        fw.close();
+    }
 }
