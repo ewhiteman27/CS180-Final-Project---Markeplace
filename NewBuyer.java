@@ -52,7 +52,7 @@ public class NewBuyer extends NewProduct {
             return false;
         } else {
             writeCart(cart);
-            writeBuy(buy);
+            writeBuyLog(buy);
             writeProduct(products);
             return true;
         }

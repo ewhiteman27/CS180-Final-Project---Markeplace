@@ -146,7 +146,11 @@ public class Market {
                     String usernameAnswer = scanner.nextLine();
                     System.out.println(Password);
                     String passwordAnswer = scanner.nextLine();
-                    removeAccount = user.deleteAccount(usernameAnswer, passwordAnswer);
+                    try {
+                        removeAccount = user.deleteAccount(usernameAnswer, passwordAnswer);
+                    } catch (Exception e) {
+                        System.out.println("lol dumbass");
+                    }
                     if (removeAccount) {
                         continue;
                     } else if (!removeAccount) {
@@ -176,7 +180,11 @@ public class Market {
                         System.out.println("What would you like your new username to be?");
                         System.out.println(Username);
                         String usernameAnswer = scanner.nextLine();
-                        changeUsername = user.changeUsername(usernameAnswer, passwordAnswer, emailAnswer);
+                        try {
+                            changeUsername = user.changeUsername(usernameAnswer, passwordAnswer, emailAnswer);
+                        } catch (Exception e) {
+                            System.out.println("lol dumbass");
+                        }
                         if (changeUsername) {
                             continue;
                         } else {
@@ -201,7 +209,7 @@ public class Market {
                                 System.out.println("Password was not changed! Either email or username was incorrect.");
                                 intoAccountOptions = true;
                             }
-                        } catch (InvalidPasswordException e) {
+                        } catch (Exception e) {
                             System.out.println(e.getMessage());
                             intoAccountOptions = true;
                         }
@@ -215,7 +223,11 @@ public class Market {
                         System.out.println("What would you like your new email to be?");
                         System.out.println(Email);
                         String emailAnswer = scanner.nextLine();
-                        changeEmailBoolean = user.changeEmail(emailAnswer, usernameAnswer, passwordAnswer);
+                        try {
+                            changeEmailBoolean = user.changeEmail(emailAnswer, usernameAnswer, passwordAnswer);
+                        } catch (Exception e) {
+                            System.out.println("lol dumbass");
+                        }
                         if (changeEmailBoolean) {
                             continue;
                         } else if (!changeEmailBoolean) {

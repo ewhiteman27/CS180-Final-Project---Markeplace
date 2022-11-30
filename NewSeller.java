@@ -15,8 +15,8 @@ public class NewSeller extends NewProduct {
         ArrayList<String> products = getProducts();
         for (int i = 0; i < products.size(); i++) {
             String[] product = products.get(i).split(",");
-            if (username.equalsIgnoreCase(product[0]) || storeName.equalsIgnoreCase(product[1])
-                    || productName.equalsIgnoreCase(product[2])) {
+            if (username.equalsIgnoreCase(product[0]) && storeName.equalsIgnoreCase(product[1])
+                    && productName.equalsIgnoreCase(product[2])) {
                 return false;
             }
         }

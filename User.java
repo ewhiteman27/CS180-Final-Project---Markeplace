@@ -137,25 +137,19 @@ public class User {
         }
     }
 
-    private void writeAccounts(ArrayList<String> accounts) {
+    private void writeAccounts(ArrayList<String> accounts) throws IOException {
         /**
          * updates the accounts.txt file to reflect the most recent account changes
          */
 
         File f = new File("accounts.txt");
-        try {
-            FileWriter fw = new FileWriter(f , false);
-            PrintWriter pw = new PrintWriter(fw);
-            for (int i = 0; i < accounts.size(); i++) { // writes all previously existing accounts
-                pw.println(accounts.get(i));
-            }
-            pw.close();
-            fw.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        FileWriter fw = new FileWriter(f , false);
+        PrintWriter pw = new PrintWriter(fw);
+        for (int i = 0; i < accounts.size(); i++) { // writes all previously existing accounts
+            pw.println(accounts.get(i));
         }
+        pw.close();
+        fw.close();
     }
 
     public boolean changeUsername(String newUsername , String password , String email) throws IOException {

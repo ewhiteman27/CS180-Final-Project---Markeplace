@@ -17,6 +17,7 @@ public class NewProduct {
             if (line.split(",").length == 6) {
                 products.add(line);
             }
+            line = bfr.readLine();
         }
         bfr.close();
         fr.close();
@@ -26,6 +27,7 @@ public class NewProduct {
     public void writeNewProduct(ArrayList<String> products, String user, String storeName, String productName,
                                 String description, int quantity, double price) throws IOException {
         File f = new File("products.txt");
+        f.createNewFile();
         FileWriter fw = new FileWriter(f , false);
         PrintWriter pw = new PrintWriter(fw);
         for (int i = 0; i < products.size(); i++) {
@@ -38,6 +40,7 @@ public class NewProduct {
 
     public void writeProduct(ArrayList<String> products) throws IOException {
         File f = new File("products.txt");
+        f.createNewFile();
         FileWriter fw = new FileWriter(f , false);
         PrintWriter pw = new PrintWriter(fw);
         for (int i = 0; i < products.size(); i++) {
@@ -55,9 +58,10 @@ public class NewProduct {
         BufferedReader bfr = new BufferedReader(fr);
         String line = bfr.readLine();
         while (line != null) {
-            if (line.split(",").length == 6) {
+            if (line.split(",").length == 7) {
                 cart.add(line);
             }
+            line = bfr.readLine();
         }
         bfr.close();
         fr.close();
@@ -75,7 +79,11 @@ public class NewProduct {
         fw.close();
     }
 
-    public void writeBuy(ArrayList<String> buy) throws IOException {
+    public ArrayList<String> getBuyLog() {
+        return new ArrayList<String>();
+    }
+
+    public void writeBuyLog(ArrayList<String> buy) throws IOException {
         File f = new File("buyLog.txt");
         FileWriter fw = new FileWriter(f, true);
         PrintWriter pw = new PrintWriter(fw);
