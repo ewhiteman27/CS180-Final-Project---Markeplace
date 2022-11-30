@@ -5,10 +5,11 @@ import java.net.*;
 import java.util.ArrayList;
 
 /**
- * A SearchServer class
- * It handles everything that deals with processing the search results. It also stores the data the search results are from.
+ * A Server class
+ * It handles everything that deals with processing the user's inputs and runs the methods.
  *
- * @author saujinpark
+ * @authors saujinpark and
+ * @version 1.0
  */
 public class Server {
 
@@ -21,16 +22,18 @@ public class Server {
         Socket socket = serverSocket.accept();
         BufferedReader receive = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter send = new PrintWriter(socket.getOutputStream());
+        //end of necessary things
 
-        String choice = receive.readLine(); //reads if user creates an account or logs in
-        User user = new User();
-        boolean hasTheAccountBeenCreated = false;
+        boolean logInMenu = false;
+        do {
+            String choice = receive.readLine(); //reads if user creates an account or logs in
+            User user = new User();
+            boolean hasTheAccountBeenCreated = false;
             if (choice.equals(createLogIn[0])) {
                 //Verifying that creating an account is successful
                 do {
 
                     String username = receive.readLine();
-
 
                     String password = receive.readLine();
 
@@ -69,19 +72,48 @@ public class Server {
                     }
                 } while (hasTheAccountBeenCreated == false);
 
+                //end of account creation
 
 
+            } else if (choice.equals(createLogIn[1])) { //LOGGING IN
+                boolean hasLoggedIn = false;
+
+                String confirmLogIn = receive.readLine();
+                //receiver 02
+
+                if (confirmLogIn.equalsIgnoreCase("1")) {
+                    logInMenu = false;
+                } else {
+                    logInMenu = true;
+                    do {
+                        String username = receive.readLine();
+
+                        String password = receive.readLine();
+                        //Receiver 03
+
+                        try {
+
+                            user = user.logIn(username, password);
+                            hasLoggedIn = true;
+                            String yOrn = "y";
+                            send.println(yOrn);
+                            send.flush();
+                            hasLoggedIn = true;
+
+                        } catch (Exception e) { //exception is caught when user fails to log in
+
+                            String yOrn = "n";
+                            send.println(yOrn);
+                            send.flush();
+                        }
+
+                    } while (hasLoggedIn == false);
+                }
 
 
+            }
+        } while (logInMenu == false);
 
-
-
-
-            } else if (choice.equals(createLogIn[1])) {
-
-
-        }
     }
 
 }
-
