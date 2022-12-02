@@ -1,5 +1,6 @@
 import java.io.*;
 import java.net.*;
+import java.util.Collections;
 import java.util.Scanner;
 import javax.swing.*;
 import java.util.ArrayList;
@@ -7,12 +8,15 @@ import java.util.ArrayList;
 /**
  * A Client class
  * It handles everything that deals with the GUI and sends information to the server
- * @authors saujinpark park1485 and
+ *
  * @version 1.0
+ * @authors saujinpark park1485 and
  */
 public class Client {
 
     public static void main(String[] args) throws IOException {
+        User user = new User();
+        NewProduct product = new NewProduct();
         int hostNumber = 4242;
         String hostName = "localhost";
         String[] createLogIn = new String[2];
@@ -26,7 +30,7 @@ public class Client {
         boolean startMenu = true;
         try {
             while (startMenu) {
-                JOptionPane.showMessageDialog(null, "Welcome to the Purdue Marketplace!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Welcome to the Purdue Marketplace!", "Market", JOptionPane.OK_OPTION);
                 String choice = (String) JOptionPane.showInputDialog(null,
                         "Please select one of the available options", "Market",
                         JOptionPane.QUESTION_MESSAGE, null, createLogIn, createLogIn[0]);
@@ -38,21 +42,25 @@ public class Client {
                     buySellOption[0] = "Buyer";
                     buySellOption[1] = "Seller";
                     boolean hasTheAccountBeenCreated = false;
+                    String username = "";
+                    String password = "";
+                    String email = "";
+                    String buyerSeller = "";
                     do {
 
-                        String username = (String) JOptionPane.showInputDialog(null, "Please enter a Username", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        username = (String) JOptionPane.showInputDialog(null, "Please enter a Username", "Market", JOptionPane.INFORMATION_MESSAGE);
                         send.println(username);
                         send.flush();
 
-                        String password = (String) JOptionPane.showInputDialog(null, "Please enter a Password", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        password = (String) JOptionPane.showInputDialog(null, "Please enter a Password", "Market", JOptionPane.INFORMATION_MESSAGE);
                         send.println(password);
                         send.flush();
 
-                        String email = (String) JOptionPane.showInputDialog(null, "Please enter a Email", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        email = (String) JOptionPane.showInputDialog(null, "Please enter a Email", "Market", JOptionPane.INFORMATION_MESSAGE);
                         send.println(email);
                         send.flush();
 
-                        String buyerSeller = (String) JOptionPane.showInputDialog(null, "Will you be using this application as a seller or a buyer?", "Market", JOptionPane.INFORMATION_MESSAGE, null, buySellOption, buySellOption[0]);
+                        buyerSeller = (String) JOptionPane.showInputDialog(null, "Will you be using this application as a seller or a buyer?", "Market", JOptionPane.INFORMATION_MESSAGE, null, buySellOption, buySellOption[0]);
                         send.println(buyerSeller);
                         send.flush();
                         //Sender 01
@@ -113,7 +121,73 @@ public class Client {
                     }
                 }
             }
+            // END OF LOGIN
 
+
+            int theUserAccountType = Integer.parseInt(receive.readLine());
+
+            String buyerFirstResponse = "";
+            String[] buyerOptions = new String[7];
+            buyerOptions[0] = "View All Available Products";
+            buyerOptions[1] = "Sort The Marketplace";
+            buyerOptions[2] = "Edit Account";
+            buyerOptions[3] = "Delete Account";
+            buyerOptions[4] = "View Cart";
+            buyerOptions[5] = "View Purchase History";
+            buyerOptions[6] = "Log Out";
+            if (theUserAccountType == 1) {
+                boolean whileBuying = false;
+                do {
+                    JOptionPane.showMessageDialog(null, "Welcome Buyer!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                    buyerFirstResponse = (String) JOptionPane.showInputDialog(null, "What would you like to do?", "Market", JOptionPane.INFORMATION_MESSAGE, null, buyerOptions, buyerOptions[0]);
+                    if (buyerFirstResponse.equals(buyerOptions[0])) {
+                        System.out.println("hi");
+                        int sizeOfProductsArray = product.getProducts().size();
+                        String[] fillingList = new String[sizeOfProductsArray];
+                        for (int i = 0; i < sizeOfProductsArray; i++) {
+                            fillingList[i] = product.getProducts().get(i);
+                        }
+
+                        JOptionPane.showInputDialog(null, "Here are all of the available products!", "Market", JOptionPane.INFORMATION_MESSAGE, null, fillingList, fillingList[0]);
+                    } else if (buyerFirstResponse.equals((buyerOptions[1]))) {
+
+
+                    } else if (buyerFirstResponse.equals((buyerOptions[2]))) {
+                        String[] editProfile = new String[3];
+                        editProfile[0] = "Change Username";
+                        editProfile[1] = "Change Password";
+                        editProfile[2] = "Change Email";
+                        String editChoice = (String) JOptionPane.showInputDialog(null, "What would you like to change?", "Market", JOptionPane.INFORMATION_MESSAGE, null, editProfile, editProfile[0]);
+                        if (editChoice.equals(editProfile[0])) {
+                            String emailStored = (String) JOptionPane.showInputDialog(null, "To change your username we must verify your email and password!\n Enter Email:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            String passwordStored = (String) JOptionPane.showInputDialog(null, "To change your username we must verify your email and password!\n Enter Password:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            String newUsernameStored = (String) JOptionPane.showInputDialog(null, "Enter your desired Username:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            boolean changeUsername = user.changeUsername(newUsernameStored, passwordStored, emailStored);
+                            if (!changeUsername) {
+                                JOptionPane.showMessageDialog(null, "Username was not changed! Either email/password was incorrect " +
+                                        "or the username you selected was already taken.", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Username change successfully!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                        } else if (editChoice.equals(editProfile[1])) {
+
+                        } else {
+
+                        }
+
+                    } else if (buyerFirstResponse.equals((buyerOptions[3]))) {
+
+                    } else if (buyerFirstResponse.equals((buyerOptions[4]))) {
+
+                    } else if (buyerFirstResponse.equals((buyerOptions[5]))) {
+
+                    } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
+
+                    }
+                } while (whileBuying == false);
+
+
+            } // THIS IS WHERE THE ELSE IF FOR SELLERS WILL BE
 
 
         } catch (Exception e) {
