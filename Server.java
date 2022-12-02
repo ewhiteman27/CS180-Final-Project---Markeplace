@@ -99,6 +99,8 @@ public class Server {
                             send.println(yOrn);
                             send.flush();
                             hasLoggedIn = true;
+                            send.println(user.getAccountType());
+                            send.flush();
 
                         } catch (Exception e) { //exception is caught when user fails to log in
 
