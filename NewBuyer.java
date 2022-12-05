@@ -26,27 +26,46 @@ public class NewBuyer extends NewProduct {
         return false;
     }
 
+    public boolean removeFromCart(String storeName, String productName) throws IOException {
+        ArrayList<String> products = getProducts();
+        ArrayList<String> cart = getCart();
+        for (int i = 0; i < products.size(); i++) {
+            String[] product = products.get(i).split(",");
+            if (product[1].equalsIgnoreCase(storeName) && product[2].equalsIgnoreCase(productName)
+                    && product[6].equalsIgnoreCase(this.username)) {
+                cart.remove(i);
+                writeCart(cart);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // TODO: FIX
     public boolean buy() throws IOException, NumberFormatException {
         ArrayList<String> products = getProducts();
         ArrayList<String> cart = getCart();
         ArrayList<String> buy = new ArrayList<String>();
-        for (int i = 0; i < cart.size(); i++) {
+        int size = cart.size();
+        for (int i = 0; i < size; i++) {
             String[] productInCart = cart.get(i).split(",");
             if (productInCart[6].equalsIgnoreCase(username)) {
-                buy.add(cart.get(i));
-                cart.remove(i);
                 for (int j = 0; j < products.size(); j++) {
-                    String[] currentProduct = products.get(i).split(",");
+                    String[] currentProduct = products.get(j).split(",");
                     if (productInCart[0].equalsIgnoreCase(currentProduct[0])
                             && productInCart[1].equalsIgnoreCase(currentProduct[1])
                             && productInCart[2].equalsIgnoreCase(currentProduct[2])) {
                         int quantityRemove = Integer.parseInt(currentProduct[4]) - Integer.parseInt(productInCart[4]);
                         currentProduct[4] = String.valueOf(quantityRemove);
-                        products.set(i, String.format("%s,%s,%s,%s,%s,%s", currentProduct[0], currentProduct[1],
+                        products.set(j, String.format("%s,%s,%s,%s,%s,%s", currentProduct[0], currentProduct[1],
                                 currentProduct[2], currentProduct[3], currentProduct[4], currentProduct[5]));
+                        buy.add(cart.get(i));
+                        cart.remove(i);
+                        break;
                     }
                 }
             }
+            size = cart.size();
         }
         if (buy.isEmpty()) {
             return false;
@@ -56,5 +75,18 @@ public class NewBuyer extends NewProduct {
             writeProduct(products);
             return true;
         }
+    }
+
+    public String getFormattedProduct(String productName, String storeName) throws IOException {
+        ArrayList<String> products = getProducts();
+        for (int i = 0; i < products.size(); i++) {
+            String[] product = products.get(i).split(",");
+            if (product[1].equalsIgnoreCase(storeName) && product[2].equalsIgnoreCase(productName)) {
+                return String.format("Product Name: %s\nStore Name: %s\nSeller: %s\nProduct " +
+                        "Description: %s\nQuantity Available: %s\nPrice: %s", product[2], product[1],
+                        product[0], product[3], product[4], product[5]);
+            }
+        }
+        return "Product not found";
     }
 }
