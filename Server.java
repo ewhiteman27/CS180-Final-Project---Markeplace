@@ -17,7 +17,7 @@ public class Server {
         String[] createLogIn = new String[2];
         createLogIn[0] = "Create new account";
         createLogIn[1] = "Log into existing account";
-
+        User edits = new User();
         ServerSocket serverSocket = new ServerSocket(4242);
         Socket socket = serverSocket.accept();
         BufferedReader receive = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -94,6 +94,7 @@ public class Server {
                         try {
 
                             user = user.logIn(username, password);
+                            edits = user;
                             hasLoggedIn = true;
                             String yOrn = "y";
                             send.println(yOrn);
@@ -115,6 +116,125 @@ public class Server {
 
             }
         } while (logInMenu == false);
+        //end of login portion
+
+
+
+
+        String userAccountType = receive.readLine(); //checks to see if the user is a buyer or seller
+        //receive 04
+
+        if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
+            String[] buyerOptions = new String[7];
+            buyerOptions[0] = "View All Available Products";
+            buyerOptions[1] = "Sort The Marketplace";
+            buyerOptions[2] = "Edit Account";
+            buyerOptions[3] = "Delete Account";
+            buyerOptions[4] = "View Cart";
+            buyerOptions[5] = "View Purchase History";
+            buyerOptions[6] = "Log Out";
+            boolean whileBuying = false;
+
+            do {
+                String buyerFirstResponse = receive.readLine();
+                if (buyerFirstResponse.equals(buyerOptions[0])) {
+
+
+                } else if (buyerFirstResponse.equals((buyerOptions[1]))) {
+
+
+                } else if (buyerFirstResponse.equals((buyerOptions[2]))) {
+                    String[] editProfile = new String[3];
+                    editProfile[0] = "Change Username";
+                    editProfile[1] = "Change Password";
+                    editProfile[2] = "Change Email";
+
+                    String editChoice = receive.readLine(); //receiver 06
+
+                    if (editChoice.equals(editProfile[0])) { //username change
+
+                        String emailStored = receive.readLine();
+                        //receiver 07
+
+                        String passwordStored = receive.readLine();
+                        //receiver 08
+
+                        String newUsernameStored = receive.readLine();
+                        //receiver 09
+
+                        boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
+                        String confirmChange;
+
+                        if (changeUsername) {
+                            confirmChange = "true";
+                        } else {
+                            confirmChange = "false";
+                        }
+
+                        send.println(confirmChange);
+                        send.flush();
+                        //sender 13
+
+                    } else if (editChoice.equals(editProfile[1])) {  //password change
+                        String emailStored = receive.readLine();
+                        //receiver 10
+
+                        String usernameStored = receive.readLine();
+                        //receiver 11
+
+                        String newPasswordStored = receive.readLine();
+                        //receiver 12
+                        try {
+                            boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                            String confirmChange;
+
+                            if (changePassword) {
+                                confirmChange = "true";
+                            } else {
+                                confirmChange = "false";
+                            }
+
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 14
+                        } catch (Exception e) {
+                            String confirmChange = "false";
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 14
+                        }
+
+                    } else if (editChoice.equals(editProfile[2])) {  //emailchange
+
+
+                    }
+
+                } else if (buyerFirstResponse.equals((buyerOptions[3]))) {
+
+                } else if (buyerFirstResponse.equals((buyerOptions[4]))) {
+
+                } else if (buyerFirstResponse.equals((buyerOptions[5]))) {
+
+                } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
+                    whileBuying = true;
+                }
+            } while (whileBuying == false);
+
+
+
+
+
+
+
+
+
+
+
+        } else if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
+
+
+
+        }
 
     }
 
