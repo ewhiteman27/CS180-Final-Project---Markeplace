@@ -125,6 +125,7 @@ public class Server {
         //receive 04
 
         if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
+            NewBuyer buy = new NewBuyer(edits.getUsername()); //gives access to buyer methods
             String[] buyerOptions = new String[7];
             buyerOptions[0] = "View All Available Products";
             buyerOptions[1] = "Sort The Marketplace";
@@ -277,9 +278,16 @@ public class Server {
         
 
         } else if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
-            String[] sellerOptions = new String[7];
+            NewSeller sell = new NewSeller(edits.getUsername()); // gives access to seller methods
+            String[] sellerOptions = new String[8];
             sellerOptions[0] = "Edit Account";
             sellerOptions[1] = "Delete Account";
+            sellerOptions[2] = "Create New Product";
+            sellerOptions[3] = "Edit Product";
+            sellerOptions[4] = "Delete Product";
+            sellerOptions[5] = "Import Product File";
+            sellerOptions[6] = "Export File";
+            sellerOptions[7] = "Log Out";
             boolean whileSelling = false;
 
             do {
@@ -373,7 +381,7 @@ public class Server {
 
 
                     }
-                    
+
                 } else if (sellerResponse.equals(sellerOptions[1])) {
                     String usernameStored = receive.readLine();
 
@@ -395,6 +403,31 @@ public class Server {
                     send.println(confirmDelete);
                     send.flush();
 
+                } else if (sellerResponse.equals(sellerOptions[2])) { //create product
+                    String storeName = receive.readLine(); //receiver 30
+                    String productName = receive.readLine();
+                    String description = receive.readLine();
+                    String quantity = receive.readLine();
+                    String price = receive.readLine();
+
+                    int realQuantity = Integer.parseInt(quantity);
+                    double realPrice = Double.parseDouble(price);
+
+                    sell.createProduct(storeName, productName, description, realQuantity, realPrice);
+                    send.println("y");
+                    send.flush();
+
+
+                } else if (sellerResponse.equals(sellerOptions[3])) { //edit product
+
+                } else if (sellerResponse.equals(sellerOptions[4])) {
+
+                } else if (sellerResponse.equals(sellerOptions[5])) {
+
+                } else if (sellerResponse.equals(sellerOptions[6])) {
+
+                } else if (sellerResponse.equals(sellerOptions[7])) {
+                    whileSelling = true;
                 }
             } while (whileSelling == false);
 
