@@ -205,11 +205,57 @@ public class Server {
                         }
 
                     } else if (editChoice.equals(editProfile[2])) {  //emailchange
+                        String usernameStored = receive.readLine();
+                        //receiver 15
 
+                        String passwordStored = receive.readLine();
+                        //receiver 16
+
+                        String newEmailStored = receive.readLine();
+                        //receiver 17
+                        String confirmChange;
+                        try {
+                            boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+
+                            if (changeEmail) {
+                                confirmChange = "true";
+                            } else {
+                                confirmChange = "false";
+                            }
+
+                        } catch (Exception e) {
+                            confirmChange = "false";
+                        }
+
+                        send.println(confirmChange);
+                        send.flush();
+                        //sender 18
 
                     }
 
-                } else if (buyerFirstResponse.equals((buyerOptions[3]))) {
+                } else if (buyerFirstResponse.equals((buyerOptions[3]))) { //delete account
+                    String usernameStored = receive.readLine();
+                    //receiver 19
+
+                    String passwordStored = receive.readLine();
+                    //receiver 20
+
+                    String confirmDelete;
+                    try {
+                        boolean delete = edits.deleteAccount(usernameStored, passwordStored);
+                        if (delete) {
+                            confirmDelete = "true";
+                            whileBuying = true;
+                        } else {
+                            confirmDelete = "false";
+                        }
+                    } catch (Exception e) {
+                        confirmDelete = "false";
+                    }
+
+                    send.println(confirmDelete);
+                    send.flush();
+                    //sender 21
 
                 } else if (buyerFirstResponse.equals((buyerOptions[4]))) {
 
@@ -226,12 +272,131 @@ public class Server {
 
 
 
+        
 
-
-
+        
 
         } else if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
+            String[] sellerOptions = new String[7];
+            sellerOptions[0] = "Edit Account";
+            sellerOptions[1] = "Delete Account";
+            boolean whileSelling = false;
 
+            do {
+                String sellerResponse = receive.readLine();
+
+                if (sellerResponse.equals(sellerOptions[0])) {
+                    String[] editProfile = new String[3];
+                    editProfile[0] = "Change Username";
+                    editProfile[1] = "Change Password";
+                    editProfile[2] = "Change Email";
+
+                    String editChoice = receive.readLine(); //receiver 06
+
+                    if (editChoice.equals(editProfile[0])) { //username change
+
+                        String emailStored = receive.readLine();
+
+
+                        String passwordStored = receive.readLine();
+
+
+                        String newUsernameStored = receive.readLine();
+
+
+                        boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
+                        String confirmChange;
+
+                        if (changeUsername) {
+                            confirmChange = "true";
+                        } else {
+                            confirmChange = "false";
+                        }
+
+                        send.println(confirmChange);
+                        send.flush();
+
+                    } else if (editChoice.equals(editProfile[1])) {  //password change
+                        String emailStored = receive.readLine();
+
+
+                        String usernameStored = receive.readLine();
+
+
+                        String newPasswordStored = receive.readLine();
+
+                        try {
+                            boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                            String confirmChange;
+
+                            if (changePassword) {
+                                confirmChange = "true";
+                            } else {
+                                confirmChange = "false";
+                            }
+
+                            send.println(confirmChange);
+                            send.flush();
+
+                        } catch (Exception e) {
+                            String confirmChange = "false";
+                            send.println(confirmChange);
+                            send.flush();
+
+                        }
+
+                    } else if (editChoice.equals(editProfile[2])) {  //emailchange
+                        String usernameStored = receive.readLine();
+
+
+                        String passwordStored = receive.readLine();
+
+
+                        String newEmailStored = receive.readLine();
+
+                        String confirmChange;
+                        try {
+                            boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+
+                            if (changeEmail) {
+                                confirmChange = "true";
+                            } else {
+                                confirmChange = "false";
+                            }
+
+                        } catch (Exception e) {
+                            confirmChange = "false";
+                        }
+
+                        send.println(confirmChange);
+                        send.flush();
+
+
+                    }
+                    
+                } else if (sellerResponse.equals(sellerOptions[1])) {
+                    String usernameStored = receive.readLine();
+
+                    String passwordStored = receive.readLine();
+
+                    String confirmDelete;
+                    try {
+                        boolean delete = edits.deleteAccount(usernameStored, passwordStored);
+                        if (delete) {
+                            confirmDelete = "true";
+                            whileSelling = true;
+                        } else {
+                            confirmDelete = "false";
+                        }
+                    } catch (Exception e) {
+                        confirmDelete = "false";
+                    }
+
+                    send.println(confirmDelete);
+                    send.flush();
+
+                }
+            } while (whileSelling == false);
 
 
         }
