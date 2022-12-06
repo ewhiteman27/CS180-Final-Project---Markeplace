@@ -89,4 +89,23 @@ public class NewBuyer extends NewProduct {
         }
         return "Product not found";
     }
+
+    public boolean exportFile(String pathname) throws IOException {
+        ArrayList<String> buyLog = getBuyLog();
+        File f = new File(pathname);
+        if (!f.exists()) {
+            f.createNewFile();
+            FileWriter fw = new FileWriter(f);
+            PrintWriter pw = new PrintWriter(fw);
+            for (int i = 0; i < buyLog.size(); i++) {
+                if (buyLog.get(i).split(",")[6].equalsIgnoreCase(username)) {
+                    pw.println(buyLog.get(i));
+                }
+            }
+            pw.close();
+            fw.close();
+            return true;
+        }
+        return false;
+    }
 }
