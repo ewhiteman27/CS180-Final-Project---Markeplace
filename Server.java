@@ -459,7 +459,28 @@ public class Server {
                         send.flush();
                     }
 
-                } else if (sellerResponse.equals(sellerOptions[4])) {
+                } else if (sellerResponse.equals(sellerOptions[4])) { //delete product
+                    String storeName = receive.readLine();
+                    String productName = receive.readLine();
+                    // receiver 32
+
+                    try {
+                        boolean delete = sell.deleteProduct(storeName, productName);        //sender 33
+                        if (delete) {
+                            String confirmDelete = "y";
+                            send.println(confirmDelete);
+                            send.flush();
+                        } else {
+                            String confirmDelete = "n";
+                            send.println(confirmDelete);
+                            send.flush();
+                        }
+
+                    } catch (Exception e) {
+                        String confirmDelete = "n";
+                        send.println(confirmDelete);
+                        send.flush();
+                    }
 
                 } else if (sellerResponse.equals(sellerOptions[5])) {
 
