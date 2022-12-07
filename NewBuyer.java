@@ -29,8 +29,8 @@ public class NewBuyer extends NewProduct {
     public boolean removeFromCart(String storeName, String productName) throws IOException {
         ArrayList<String> products = getProducts();
         ArrayList<String> cart = getCart();
-        for (int i = 0; i < products.size(); i++) {
-            String[] product = products.get(i).split(",");
+        for (int i = 0; i < cart.size(); i++) {
+            String[] product = cart.get(i).split(",");
             if (product[1].equalsIgnoreCase(storeName) && product[2].equalsIgnoreCase(productName)
                     && product[6].equalsIgnoreCase(this.username)) {
                 cart.remove(i);
@@ -49,7 +49,7 @@ public class NewBuyer extends NewProduct {
         int size = cart.size();
         for (int i = 0; i < size; i++) {
             String[] productInCart = cart.get(i).split(",");
-            if (productInCart[6].equalsIgnoreCase(username)) {
+            if (productInCart[0].equalsIgnoreCase(username)) {
                 for (int j = 0; j < products.size(); j++) {
                     String[] currentProduct = products.get(j).split(",");
                     if (productInCart[0].equalsIgnoreCase(currentProduct[0])
@@ -83,7 +83,7 @@ public class NewBuyer extends NewProduct {
             String[] product = products.get(i).split(",");
             if (product[1].equalsIgnoreCase(storeName) && product[2].equalsIgnoreCase(productName)) {
                 return String.format("Product Name: %s\nStore Name: %s\nSeller: %s\nProduct " +
-                        "Description: %s\nQuantity Available: %s\nPrice: %s", product[2], product[1],
+                                "Description: %s\nQuantity Available: %s\nPrice: %s", product[2], product[1],
                         product[0], product[3], product[4], product[5]);
             }
         }
