@@ -409,21 +409,55 @@ public class Server {
                     String description = receive.readLine();
                     String quantity = receive.readLine();
                     String price = receive.readLine();
+                    try {
+                        int realQuantity = Integer.parseInt(quantity);
+                        double realPrice = Double.parseDouble(price);
 
-                    int realQuantity = Integer.parseInt(quantity);
-                    double realPrice = Double.parseDouble(price);
-
-                    boolean listed = sell.createProduct(storeName, productName, description, realQuantity, realPrice);
-                    if (listed) {
-                        send.println("y");
-                        send.flush();
-                    } else {
+                        boolean listed = sell.createProduct(storeName, productName, description, realQuantity, realPrice);
+                        if (storeName.equals("") || productName.equals("") || quantity.equals("") || price.equals("")) {
+                            listed = false;
+                        }
+                        if (listed) {
+                            send.println("y");
+                            send.flush();
+                        } else {
+                            send.println("n");
+                            send.flush();
+                        }
+                    } catch (Exception e) {
                         send.println("n");
                         send.flush();
                     }
 
 
                 } else if (sellerResponse.equals(sellerOptions[3])) { //edit product
+                    String storeName = receive.readLine(); //receiver 31
+                    String productName = receive.readLine();
+                    String newStore = receive.readLine();
+                    String newName = receive.readLine();
+                    String newDescription = receive.readLine();
+                    String quantity = receive.readLine();
+                    String price = receive.readLine();
+                    try {
+                        int newQuantity = Integer.parseInt(quantity);
+                        double newPrice = Double.parseDouble(price);
+
+                        boolean confirmEdit = sell.editProduct(storeName, productName, newStore, newName, newDescription, newQuantity, newPrice);
+                        if (storeName.equals("") || productName.equals("") || newStore.equals("") || newName.equals("") ||
+                                newDescription.equals("") || quantity.equals("") || price.equals("")) {
+                            confirmEdit = false;
+                        }
+                        if (confirmEdit) {
+                            send.println("y");    //sender32
+                            send.flush();
+                        } else {
+                            send.println("n");
+                            send.flush();
+                        }
+                    } catch (Exception e) {
+                        send.println("n");
+                        send.flush();
+                    }
 
                 } else if (sellerResponse.equals(sellerOptions[4])) {
 
