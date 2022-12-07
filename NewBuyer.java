@@ -49,7 +49,7 @@ public class NewBuyer extends NewProduct {
         int size = cart.size();
         for (int i = 0; i < size; i++) {
             String[] productInCart = cart.get(i).split(",");
-            if (productInCart[0].equalsIgnoreCase(username)) {
+            if (productInCart[6].equalsIgnoreCase(username)) {
                 for (int j = 0; j < products.size(); j++) {
                     String[] currentProduct = products.get(j).split(",");
                     if (productInCart[0].equalsIgnoreCase(currentProduct[0])
@@ -61,7 +61,6 @@ public class NewBuyer extends NewProduct {
                                 currentProduct[2], currentProduct[3], currentProduct[4], currentProduct[5]));
                         buy.add(cart.get(i));
                         cart.remove(i);
-                        break;
                     }
                 }
             }
@@ -107,5 +106,17 @@ public class NewBuyer extends NewProduct {
             return true;
         }
         return false;
+    }
+
+    public int numInCart() throws IOException {
+        ArrayList<String> cart = getCart();
+        int count = 0;
+        for (int i = 0; i < cart.size(); i++) {
+            String[] item = cart.get(i).split(",");
+            if (item[6].equalsIgnoreCase(username)) {
+                count++;
+            }
+        }
+        return count;
     }
 }

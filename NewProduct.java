@@ -79,8 +79,22 @@ public class NewProduct {
         fw.close();
     }
 
-    public ArrayList<String> getBuyLog() {
-        return new ArrayList<String>();
+    public ArrayList<String> getBuyLog() throws IOException {
+        File f = new File("buyLog.txt");
+        ArrayList<String> buyLog = new ArrayList<String>();
+        f.createNewFile();
+        FileReader fr = new FileReader(f);
+        BufferedReader bfr = new BufferedReader(fr);
+        String line = bfr.readLine();
+        while (line != null) {
+            if (line.split(",").length == 7) {
+                buyLog.add(line);
+            }
+            line = bfr.readLine();
+        }
+        bfr.close();
+        fr.close();
+        return buyLog;
     }
 
     public void writeBuyLog(ArrayList<String> buy) throws IOException {
