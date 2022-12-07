@@ -119,4 +119,13 @@ public class NewBuyer extends NewProduct {
         }
         return count;
     }
+      public ArrayList<String> formatProducts() throws IOException {
+        ArrayList<String> formattedProducts = new ArrayList<>();
+        for (int i = 0; i < getProducts().size(); i++) {
+            String[] product = getProducts().get(i).split(",");
+            formattedProducts.add(String.format("Product Name: %s Store: %s Description: %s Quantity: %s Price: %s", product[2], product[1], product[3], product[4], product[5]));
+        }
+        return formattedProducts;
+
+    }
 }
