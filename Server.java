@@ -413,9 +413,14 @@ public class Server {
                     int realQuantity = Integer.parseInt(quantity);
                     double realPrice = Double.parseDouble(price);
 
-                    sell.createProduct(storeName, productName, description, realQuantity, realPrice);
-                    send.println("y");
-                    send.flush();
+                    boolean listed = sell.createProduct(storeName, productName, description, realQuantity, realPrice);
+                    if (listed) {
+                        send.println("y");
+                        send.flush();
+                    } else {
+                        send.println("n");
+                        send.flush();
+                    }
 
 
                 } else if (sellerResponse.equals(sellerOptions[3])) { //edit product
@@ -426,7 +431,7 @@ public class Server {
 
                 } else if (sellerResponse.equals(sellerOptions[6])) {
 
-                } else if (sellerResponse.equals(sellerOptions[7])) {
+                } else if (sellerResponse.equals(sellerOptions[7])) { //log out
                     whileSelling = true;
                 }
             } while (whileSelling == false);
