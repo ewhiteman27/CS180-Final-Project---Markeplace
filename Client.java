@@ -505,7 +505,20 @@ public class Client {
                             JOptionPane.showMessageDialog(null, "Product edit failed!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         }
 
-                    } else if (sellerFirstResponse.equals(sellerOptions[4])) {
+                    } else if (sellerFirstResponse.equals(sellerOptions[4])) { //delete product
+                        String storeName = JOptionPane.showInputDialog(null, "Enter the name of the store that the product is listed:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String productName = JOptionPane.showInputDialog(null, "Enter the name of the product:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(storeName);  //sender 32
+                        send.flush();
+                        send.println(productName);
+                        send.flush();
+                        String confirmDelete = receive.readLine(); //receiver 33
+                        if (confirmDelete.equalsIgnoreCase("y")) {
+                            JOptionPane.showMessageDialog(null, "Product was successfully removed!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        } else if (confirmDelete.equalsIgnoreCase("n")) {
+                            JOptionPane.showMessageDialog(null, "Product removal failed!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                        }
 
                     } else if (sellerFirstResponse.equals(sellerOptions[5])) {
 
