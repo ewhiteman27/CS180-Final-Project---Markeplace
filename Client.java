@@ -471,8 +471,11 @@ public class Client {
                         String confirmListing = receive.readLine();
                         if (confirmListing.equalsIgnoreCase("y")) {
                             JOptionPane.showMessageDialog(null, "Product was created!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        } else if (confirmListing.equalsIgnoreCase("n")) {
+                            JOptionPane.showMessageDialog(null, "Product creation failed!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         }
-                    } else if (sellerFirstResponse.equals(sellerOptions[3])) {
+                    } else if (sellerFirstResponse.equals(sellerOptions[3])) { //edit product
+
 
                     } else if (sellerFirstResponse.equals(sellerOptions[4])) {
 
@@ -480,7 +483,7 @@ public class Client {
 
                     } else if (sellerFirstResponse.equals(sellerOptions[6])) {
 
-                    } else if (sellerFirstResponse.equals(sellerOptions[7])) {
+                    } else if (sellerFirstResponse.equals(sellerOptions[7])) { //log out
                         JOptionPane.showMessageDialog(null, "Thank you for using the Market!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         whileSelling = true;
                     }
