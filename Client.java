@@ -474,8 +474,36 @@ public class Client {
                         } else if (confirmListing.equalsIgnoreCase("n")) {
                             JOptionPane.showMessageDialog(null, "Product creation failed!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         }
-                    } else if (sellerFirstResponse.equals(sellerOptions[3])) { //edit product
 
+                    } else if (sellerFirstResponse.equals(sellerOptions[3])) { //edit product
+                        String storeName = JOptionPane.showInputDialog(null, "Enter the name of the store that the product is listed:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String productName = JOptionPane.showInputDialog(null, "Enter the product name:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String newStoreName = JOptionPane.showInputDialog(null, "Enter the new Store Name:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String newProductName = JOptionPane.showInputDialog(null, "Enter the new Product Name:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String newDescription = JOptionPane.showInputDialog(null, "Enter the new Description:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String newQuantity = JOptionPane.showInputDialog(null, "Enter the new Quantity:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String newPrice = JOptionPane.showInputDialog(null, "Enter the new price:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(storeName);  //sender 31
+                        send.flush();
+                        send.println(productName);
+                        send.flush();
+                        send.println(newStoreName);
+                        send.flush();
+                        send.println(newProductName);
+                        send.flush();
+                        send.println(newDescription);
+                        send.flush();
+                        send.println(newQuantity);
+                        send.flush();
+                        send.println(newPrice);
+                        send.flush();
+
+                        String confirmEdit = receive.readLine(); //receiver 32
+                        if (confirmEdit.equalsIgnoreCase("y")) {
+                            JOptionPane.showMessageDialog(null, "Product was edited!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        } else if (confirmEdit.equalsIgnoreCase("n")) {
+                            JOptionPane.showMessageDialog(null, "Product edit failed!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        }
 
                     } else if (sellerFirstResponse.equals(sellerOptions[4])) {
 
