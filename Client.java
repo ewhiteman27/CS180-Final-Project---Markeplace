@@ -139,7 +139,7 @@ public class Client {
             //sender04
             String buyerFirstResponse = "";
             String sellerFirstResponse = "";
-            String[] buyerOptions = new String[7];
+            String[] buyerOptions = new String[8];
             buyerOptions[0] = "View All Available Products"; //done
             buyerOptions[1] = "Sort The Marketplace";
             buyerOptions[2] = "Edit Account"; //done
@@ -147,6 +147,7 @@ public class Client {
             buyerOptions[4] = "View Cart"; //done
             buyerOptions[5] = "Export Purchase History"; //may be a problem with the method
             buyerOptions[6] = "Log Out"; //done
+            buyerOptions[7] = "View a Product's Details"; //almost
             if (theUserAccountType == 1) {  //buyer
                 boolean whileBuying = false;
                 do {
@@ -391,6 +392,7 @@ public class Client {
 
                         } else if (cartResponse.equalsIgnoreCase(cartOptions[2])) { //go back to main menu
 
+
                         }
 
 
@@ -410,6 +412,20 @@ public class Client {
                     } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
                         JOptionPane.showMessageDialog(null, "Thank you for using the Market!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         whileBuying = true;
+                    } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) {
+                        String storeName = (String) JOptionPane.showInputDialog(null, "Enter the name of the store that carries the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        String productName = (String) JOptionPane.showInputDialog(null, "Enter the name of the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(storeName);   //sender details
+                        send.flush();
+                        send.println(productName);
+                        send.flush();
+
+                        String confirm = receive.readLine(); //confirm details
+
+                        JOptionPane.showMessageDialog(null, confirm, "Market", JOptionPane.INFORMATION_MESSAGE);
+
+
+
                     }
                 } while (whileBuying == false);
 
