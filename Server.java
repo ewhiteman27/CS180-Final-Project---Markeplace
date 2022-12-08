@@ -258,7 +258,71 @@ public class Server {
                     send.flush();
                     //sender 21
 
-                } else if (buyerFirstResponse.equals((buyerOptions[4]))) {
+                } else if (buyerFirstResponse.equals((buyerOptions[4]))) { //view cart plus
+                    String[] cartOptions = new String[3];
+                    cartOptions[0] = "Add Item to Cart";
+                    cartOptions[1] = "Remove Item From Cart";
+                    cartOptions[2] = "Go Back to Main Menu";
+                    ArrayList<String> cart = buy.getCart();
+                    try {
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(cart);
+                    } catch (Exception e) {
+                        String n  = "n";
+                    }
+
+                    String cartChoice = receive.readLine();
+                    if (cartChoice.equalsIgnoreCase("purchase")) {
+
+                    }
+
+                    if (cartChoice.equalsIgnoreCase(cartOptions[0])) { //add to cart
+                        String storeName = receive.readLine();
+                        String productName = receive.readLine();
+                        String quantity = receive.readLine();
+                        try {
+                            int formatQuantity = Integer.parseInt(quantity);
+                            boolean bought = buy.addToCart(storeName, productName, formatQuantity);
+                            if (bought) {
+                                String confirmAdd = "y";
+                                send.println(confirmAdd);
+                                send.flush();
+                            } else {
+                                String confirmAdd = "n";
+                                send.println(confirmAdd);
+                                send.flush();
+                            }
+
+
+                        } catch (Exception e) {
+                            String confirmAdd = "n";
+                            send.println(confirmAdd);
+                            send.flush(); //sender confirm add
+                        }
+
+                    } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
+                        String confirmRemove = "";
+                        String storeName = receive.readLine();
+                        String productName = receive.readLine();
+                        try {
+                            boolean remove = buy.removeFromCart(storeName, productName);
+                            if (remove) {
+                                confirmRemove = "y";
+                            } else {
+                                confirmRemove = "n";
+                            }
+                            send.println(confirmRemove);
+                            send.flush();
+                        } catch (Exception e) {
+                            confirmRemove = "n";
+                            send.println(confirmRemove);
+                            send.flush();
+                        }
+
+
+                    } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) {
+                        String haha = "Smile and Wave";
+                    }
 
                 } else if (buyerFirstResponse.equals((buyerOptions[5]))) {
 
