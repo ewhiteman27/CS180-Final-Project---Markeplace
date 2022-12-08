@@ -140,13 +140,13 @@ public class Client {
             String buyerFirstResponse = "";
             String sellerFirstResponse = "";
             String[] buyerOptions = new String[7];
-            buyerOptions[0] = "View All Available Products";
+            buyerOptions[0] = "View All Available Products"; //done
             buyerOptions[1] = "Sort The Marketplace";
-            buyerOptions[2] = "Edit Account";
-            buyerOptions[3] = "Delete Account";
-            buyerOptions[4] = "View Cart";
-            buyerOptions[5] = "View Purchase History";
-            buyerOptions[6] = "Log Out";
+            buyerOptions[2] = "Edit Account"; //done
+            buyerOptions[3] = "Delete Account"; //done
+            buyerOptions[4] = "View Cart"; //done
+            buyerOptions[5] = "Export Purchase History"; //may be a problem with the method
+            buyerOptions[6] = "Log Out"; //done
             if (theUserAccountType == 1) {  //buyer
                 boolean whileBuying = false;
                 do {
@@ -343,8 +343,13 @@ public class Client {
 
                         send.println(cartResponse);
                         send.flush();
-                        if (cartResponse.equalsIgnoreCase("purchase")) { //purchase thank you message
-                            JOptionPane.showMessageDialog(null, "Thank you for your purchase!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        if (cartResponse.equalsIgnoreCase("purchase")) { //purchase thank you message/uhoh
+                            String confirmPurchase = receive.readLine();
+                            if (confirmPurchase.equalsIgnoreCase("y")) {
+                                JOptionPane.showMessageDialog(null, "Thank you for your purchase!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            } else if (confirmPurchase.equalsIgnoreCase("n")) {
+                                JOptionPane.showMessageDialog(null, "Cart is Empty!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            }
                         }
 
 
@@ -389,7 +394,18 @@ public class Client {
                         }
 
 
-                    } else if (buyerFirstResponse.equals((buyerOptions[5]))) {
+                    } else if (buyerFirstResponse.equals((buyerOptions[5]))) { //export history
+                        String filePath = JOptionPane.showInputDialog(null, "Enter the file path:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(filePath); //sender filepath
+                        send.flush();
+
+                        String confirmExport = receive.readLine();
+                        if (confirmExport.equalsIgnoreCase("y")) {
+                            JOptionPane.showMessageDialog(null, "File Was Exported!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        } else if (confirmExport.equalsIgnoreCase("n")) {
+                            JOptionPane.showMessageDialog(null, "File Failed to Export!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                        }
 
                     } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
                         JOptionPane.showMessageDialog(null, "Thank you for using the Market!", "Market", JOptionPane.INFORMATION_MESSAGE);
@@ -410,14 +426,14 @@ public class Client {
             //START OF SELLER
             if (theUserAccountType == 2) {
                 String[] sellerOptions = new String[8];
-                sellerOptions[0] = "Edit Account";
-                sellerOptions[1] = "Delete Account";
-                sellerOptions[2] = "Create New Product";
-                sellerOptions[3] = "Edit Product";
-                sellerOptions[4] = "Delete Product";
+                sellerOptions[0] = "Edit Account"; //done
+                sellerOptions[1] = "Delete Account"; //done
+                sellerOptions[2] = "Create New Product"; //done
+                sellerOptions[3] = "Edit Product"; //done
+                sellerOptions[4] = "Delete Product"; //done
                 sellerOptions[5] = "Import Product File";
                 sellerOptions[6] = "Export File";
-                sellerOptions[7] = "Log Out";
+                sellerOptions[7] = "Log Out"; //done
                 boolean whileSelling = false;
                 do {
                     JOptionPane.showMessageDialog(null, "Welcome Seller!", "Market", JOptionPane.INFORMATION_MESSAGE);
