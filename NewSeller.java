@@ -94,4 +94,29 @@ public class NewSeller extends NewProduct {
         }
         return false;
     }
+     public ArrayList<String> sellerLog(String storeName) {
+        File f = new File("buyLog.txt");
+        ArrayList<String> products = new ArrayList<String>();
+        try {
+            FileReader fr = new FileReader(f);
+            BufferedReader bfr = new BufferedReader(fr);
+            String line = bfr.readLine();
+            while (line != null) {
+                if (line.split(",").length == 6) {
+                    products.add(line);
+                }
+                line = bfr.readLine();
+            }
+        } catch (Exception e) {
+            e.getMessage();
+        }
+        ArrayList<String> storeItems = new ArrayList<>();
+        for (int i = 3; i < products.size(); i+=6) {
+            if (products.get(i).equalsIgnoreCase(storeName)) {
+                String currentProduct = products.get(i - 2) + "," + products.get(i - 1) + "," + storeName + "," + products.get(i + 2);
+                storeItems.add(currentProduct);
+            }
+        }
+        return storeItems;
+    }
 }
