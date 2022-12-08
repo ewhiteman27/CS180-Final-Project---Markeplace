@@ -132,7 +132,7 @@ public class Server {
             buyerOptions[2] = "Edit Account";
             buyerOptions[3] = "Delete Account";
             buyerOptions[4] = "View Cart";
-            buyerOptions[5] = "View Purchase History";
+            buyerOptions[5] = "Export Purchase History";
             buyerOptions[6] = "Log Out";
             boolean whileBuying = false;
 
@@ -273,6 +273,20 @@ public class Server {
 
                     String cartChoice = receive.readLine();
                     if (cartChoice.equalsIgnoreCase("purchase")) {
+                        boolean purchased = true;
+                        int loop = buy.numInCart();
+                        for (int i = 0; i < loop; i++) {
+                            purchased = buy.buy();
+                            if (!purchased) {
+                                send.println("n");
+                                send.flush();
+                                break;
+                            }
+                        }
+                        if (purchased) {
+                            send.println("y");
+                            send.flush();
+                        }
 
                     }
 
@@ -324,8 +338,23 @@ public class Server {
                         String haha = "Smile and Wave";
                     }
 
-                } else if (buyerFirstResponse.equals((buyerOptions[5]))) {
-
+                } else if (buyerFirstResponse.equals((buyerOptions[5]))) { //export purchase history
+                    String filePath = receive.readLine(); //receiver filepath
+                    try {
+                        boolean export = buy.exportFile(filePath);
+                        String confirm;
+                        if (export) {
+                            confirm = "y";
+                        } else {
+                            confirm = "n";
+                        }
+                        send.println(confirm);
+                        send.flush();
+                    } catch (Exception e) {
+                        String confirm = "n";
+                        send.println(confirm);
+                        send.flush();
+                    }
                 } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
                     whileBuying = true;
                 }
@@ -547,6 +576,7 @@ public class Server {
                     }
 
                 } else if (sellerResponse.equals(sellerOptions[5])) {
+
 
                 } else if (sellerResponse.equals(sellerOptions[6])) {
 
