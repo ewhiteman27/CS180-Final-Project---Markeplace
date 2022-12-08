@@ -126,7 +126,7 @@ public class Server {
 
         if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
             NewBuyer buy = new NewBuyer(edits.getUsername()); //gives access to buyer methods
-            String[] buyerOptions = new String[7];
+            String[] buyerOptions = new String[8];
             buyerOptions[0] = "View All Available Products";
             buyerOptions[1] = "Sort The Marketplace";
             buyerOptions[2] = "Edit Account";
@@ -134,6 +134,7 @@ public class Server {
             buyerOptions[4] = "View Cart";
             buyerOptions[5] = "Export Purchase History";
             buyerOptions[6] = "Log Out";
+            buyerOptions[7] = "View a Product's Details";
             boolean whileBuying = false;
 
             do {
@@ -357,7 +358,15 @@ public class Server {
                     }
                 } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
                     whileBuying = true;
+                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details  //IT is giving me each individual index instead of the combined string
+                    String storeName = receive.readLine();
+                    String productName = receive.readLine();
+                    String withDescription = buy.getFormattedProduct(productName, storeName);
+
+                    send.println(withDescription);
+                    send.flush();
                 }
+
             } while (whileBuying == false);
 
 
