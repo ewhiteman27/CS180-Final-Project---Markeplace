@@ -23,6 +23,7 @@ public class Server {
         Socket socket = serverSocket.accept();
         BufferedReader receive = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintWriter send = new PrintWriter(socket.getOutputStream());
+        NewProduct product = new NewProduct();
         //end of necessary things
 
         boolean logInMenu = false;
@@ -127,24 +128,25 @@ public class Server {
 
         if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
             NewBuyer buy = new NewBuyer(edits.getUsername()); //gives access to buyer methods
-            String[] buyerOptions = new String[8];
-            buyerOptions[0] = "View All Available Products";
-            buyerOptions[1] = "Sort The Marketplace";
-            buyerOptions[2] = "Edit Account";
-            buyerOptions[3] = "Delete Account";
-            buyerOptions[4] = "View Cart";
-            buyerOptions[5] = "Export Purchase History";
-            buyerOptions[6] = "Log Out";
-            buyerOptions[7] = "View a Product's Details";
+            String[] buyerOptions = new String[9];
+            buyerOptions[0] = "View All Available Products"; //done
+            buyerOptions[1] = "Sort The Marketplace"; //framed
+            buyerOptions[2] = "Edit Account"; //done
+            buyerOptions[3] = "Delete Account"; //done
+            buyerOptions[4] = "View Cart"; //done
+            buyerOptions[5] = "Export Purchase History"; //done
+            buyerOptions[6] = "Log Out"; //done
+            buyerOptions[7] = "View a Product's Details"; //done
+            buyerOptions[8] = "Search"; //done
             boolean whileBuying = false;
 
             do {
                 String buyerFirstResponse = receive.readLine();
                 if (buyerFirstResponse.equals(buyerOptions[0])) { //view all products
-                    int sizeOfProductsArray = buy.formatProducts().size();
+                    int sizeOfProductsArray = buy.formatProducts(product.getProducts()).size();
                     String[] fillingList = new String[sizeOfProductsArray];
                     for (int i = 0; i < sizeOfProductsArray; i++) {
-                        fillingList[i] = buy.formatProducts().get(i);
+                        fillingList[i] = buy.formatProducts(product.getProducts()).get(i);
                     }
                     try {
                         ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
@@ -156,6 +158,20 @@ public class Server {
 
 
                 } else if (buyerFirstResponse.equals((buyerOptions[1]))) { //sort
+                    String[] sortType = new String[2];
+                    sortType[0] = "Price";
+                    sortType[1] = "Quantity";
+                    String type = receive.readLine();
+                    ArrayList<String> sort = new ArrayList<>();
+                    if (type.equalsIgnoreCase(sortType[0])) { //price
+                        sort = buy.sortPrice();
+                    } else if (type.equalsIgnoreCase(sortType[1])) { //quantity
+                        sort = buy.sortQuantity();
+                    }
+                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                    objectOutput.writeObject(sort);
+
+
 
 
                 } else if (buyerFirstResponse.equals((buyerOptions[2]))) {
@@ -378,9 +394,30 @@ public class Server {
 
                     send.println(withDescription);
                     send.flush();
+                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
+                    String searchTerm = receive.readLine();
+                    ArrayList<String> results = buy.searchProduct(searchTerm);
+                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                    objectOutput.writeObject(results);
+
                 }
 
             } while (whileBuying == false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -394,7 +431,7 @@ public class Server {
 
         } else if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
             NewSeller sell = new NewSeller(edits.getUsername()); // gives access to seller methods
-            String[] sellerOptions = new String[9];
+            String[] sellerOptions = new String[10];
             sellerOptions[0] = "Edit Account"; //done
             sellerOptions[1] = "Delete Account"; //done
             sellerOptions[2] = "Create New Product"; //done
@@ -404,6 +441,7 @@ public class Server {
             sellerOptions[6] = "Export File"; //done?
             sellerOptions[7] = "Log Out"; //done
             sellerOptions[8] = "View Store Statistics";
+            sellerOptions[9] = "View Cart Information";
             boolean whileSelling = false;
 
             do {
@@ -652,6 +690,8 @@ public class Server {
                     } catch (Exception e) {
                         String hi = "";
                     }
+                } else if (sellerResponse.equalsIgnoreCase(sellerOptions[9])) { //cart information
+
                 }
             } while (whileSelling == false);
 
