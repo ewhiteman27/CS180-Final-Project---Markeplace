@@ -711,7 +711,7 @@ public class Client {
                     } else if (sellerFirstResponse.equals(sellerOptions[7])) { //log out
                         JOptionPane.showMessageDialog(null, "Thank you for using the Market!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         whileSelling = true;
-                    } else if (sellerFirstResponse.equals(sellerOptions[8])) {
+                    } else if (sellerFirstResponse.equals(sellerOptions[8])) { //seller log
                         String storeName = JOptionPane.showInputDialog(null, "Enter the name of the store that you wish to see the statistics for:" , "Market", JOptionPane.INFORMATION_MESSAGE);
                         send.println(storeName);
                         send.flush();
@@ -747,7 +747,7 @@ public class Client {
                         cartStats.addAll(temp);
                         String[] finalStats = new String[cartStats.size()];
                         cartStats.toArray(finalStats);
-                        
+
 
                         String selectNull = (String) JOptionPane.showInputDialog(null, "Statistics", "Market", JOptionPane.INFORMATION_MESSAGE, null, finalStats, finalStats[0]);
                     }
