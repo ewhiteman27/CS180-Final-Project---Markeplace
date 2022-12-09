@@ -737,6 +737,19 @@ public class Client {
 
                         }
 
+                    } else if (sellerFirstResponse.equalsIgnoreCase(sellerOptions[9])) {
+                        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                        Object object = oi.readObject();
+                        ArrayList<String> temp = (ArrayList<String>) object;
+                        ArrayList<String> cartStats = new ArrayList<>();
+
+
+                        cartStats.addAll(temp);
+                        String[] finalStats = new String[cartStats.size()];
+                        cartStats.toArray(finalStats);
+                        
+
+                        String selectNull = (String) JOptionPane.showInputDialog(null, "Statistics", "Market", JOptionPane.INFORMATION_MESSAGE, null, finalStats, finalStats[0]);
                     }
 
                 } while (whileSelling == false);
