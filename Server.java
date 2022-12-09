@@ -691,6 +691,10 @@ public class Server {
                         String hi = "";
                     }
                 } else if (sellerResponse.equalsIgnoreCase(sellerOptions[9])) { //cart information
+                    ArrayList<String> cartStats = sell.;//insertmethod
+                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                    objectOutput.writeObject(cartStats);
+
 
                 }
             } while (whileSelling == false);
