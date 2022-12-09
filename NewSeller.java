@@ -96,12 +96,23 @@ public class NewSeller extends NewProduct {
     }
      public ArrayList<String> sellerLog(String storeName) throws IOException {
         ArrayList<String> buyLog = getBuyLog();
-        ArrayList<String> storeItems = new ArrayList<>();
+        ArrayList<String> storeBuyLog = new ArrayList<>();
         for (int i = 0; i < buyLog.size(); i++) {
-            if (buyLog.get(i).equalsIgnoreCase(storeName)) {
-                storeItems.add(buyLog.get(i));
+            if (buyLog.get(i).split(",")[1].equalsIgnoreCase(storeName)) {
+                storeBuyLog.add(buyLog.get(i));
             }
         }
-        return storeItems;
+        return formatCartItems(storeBuyLog);
+    }
+
+    public ArrayList<String> getSellerCart() throws IOException {
+        ArrayList<String> cart = getCart();
+        ArrayList<String> sellerCart = new ArrayList<>();
+        for (int i = 0; i < cart.size(); i++) {
+            if (cart.get(i).split(",")[0].equalsIgnoreCase(username)) {
+                sellerCart.add(cart.get(i));
+            }
+        }
+        return formatCartItems(sellerCart);
     }
 }

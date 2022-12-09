@@ -107,4 +107,22 @@ public class NewProduct {
         pw.close();
         fw.close();
     }
+
+    public ArrayList<String> formatProducts(ArrayList<String> products) throws IOException {
+        ArrayList<String> formattedProducts = new ArrayList<>();
+        for (int i = 0; i < products.size(); i++) {
+            String[] product = products.get(i).split(",");
+            formattedProducts.add(String.format("Product Name: %s, Store: %s, Price: %s", product[2], product[1], product[5]));
+        }
+        return formattedProducts;
+    }
+
+    public ArrayList<String> formatCartItems(ArrayList<String> cart) throws IOException {
+        ArrayList<String> formattedCart = new ArrayList<>();
+        for (int i = 0; i < cart.size(); i++) {
+            String[] product = cart.get(i).split(",");
+            formattedCart.add(String.format("Buyer: %s, Product Name: %s, Store: %s, Price: %s", product[6], product[2], product[1], product[5]));
+        }
+        return formattedCart;
+    }
 }

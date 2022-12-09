@@ -1,5 +1,6 @@
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class NewBuyer extends NewProduct {
     String username;
@@ -118,14 +119,6 @@ public class NewBuyer extends NewProduct {
         }
         return count;
     }
-    public ArrayList<String> formatProducts(ArrayList<String> products) throws IOException {
-        ArrayList<String> formattedProducts = new ArrayList<>();
-        for (int i = 0; i < products.size(); i++) {
-            String[] product = products.get(i).split(",");
-            formattedProducts.add(String.format("Product Name: %s, Store: %s, Price: %s", product[2], product[1], product[5]));
-        }
-        return formattedProducts;
-    }
 
     // TODO: SEARCH AND SORT
     public ArrayList<String> searchProduct(String searchTerm) throws IOException {
@@ -140,8 +133,45 @@ public class NewBuyer extends NewProduct {
         return formatProducts(searchResults);
     }
 
-    public ArrayList<String> sortQuantity() throws IOException {
+    public ArrayList<String> sortQuantity() throws IOException, NumberFormatException {
         ArrayList<String> products = getProducts();
+        ArrayList<Integer> quantities = new ArrayList<>();
+        ArrayList<String> sortedProducts = new ArrayList<>();
+        for (int i = 0; i < products.size(); i++) {
+            String[] product = products.get(i).split(",");
+            quantities.add(Integer.parseInt(product[4]));
+        }
+        quantities.sort(Comparator.naturalOrder());
+        for (int i = 0; i < products.size(); i++) {
+            int quantity = Integer.parseInt(products.get(i).split(",")[4]);
+            for (int j = 0; j < quantities.size(); j++) {
+                if (quantity == quantities.get(j)) {
+                    sortedProducts.add(products.get(i));
+                    products.remove(i);
+                }
+            }
+        }
+        return formatProducts(sortedProducts);
+    }
 
+    public ArrayList<String> sortPrice() throws IOException, NumberFormatException {
+        ArrayList<String> products = getProducts();
+        ArrayList<Double> prices = new ArrayList<>();
+        ArrayList<String> sortedProducts = new ArrayList<>();
+        for (int i = 0; i < products.size(); i++) {
+            String[] product = products.get(i).split(",");
+            prices.add(Double.parseDouble(product[5]));
+        }
+        prices.sort(Comparator.naturalOrder());
+        for (int i = 0; i < products.size(); i++) {
+            int price = Integer.parseInt(products.get(i).split(",")[5]);
+            for (int j = 0; j < prices.size(); j++) {
+                if (Math.abs(price - prices.get(i)) < 0.0001) {
+                    sortedProducts.add(products.get(i));
+                    products.remove(i);
+                }
+            }
+        }
+        return formatProducts(sortedProducts);
     }
 }
