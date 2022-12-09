@@ -41,7 +41,6 @@ public class NewBuyer extends NewProduct {
         return false;
     }
 
-    // TODO: FIX
     public boolean buy() throws IOException, NumberFormatException {
         ArrayList<String> products = getProducts();
         ArrayList<String> cart = getCart();
@@ -119,14 +118,30 @@ public class NewBuyer extends NewProduct {
         }
         return count;
     }
-      public ArrayList<String> formatProducts() throws IOException {
+    public ArrayList<String> formatProducts(ArrayList<String> products) throws IOException {
         ArrayList<String> formattedProducts = new ArrayList<>();
-        ArrayList<String> products = getProducts();
         for (int i = 0; i < products.size(); i++) {
             String[] product = products.get(i).split(",");
             formattedProducts.add(String.format("Product Name: %s, Store: %s, Price: %s", product[2], product[1], product[5]));
         }
         return formattedProducts;
+    }
+
+    // TODO: SEARCH AND SORT
+    public ArrayList<String> searchProduct(String searchTerm) throws IOException {
+        ArrayList<String> products = getProducts();
+        ArrayList<String> searchResults = new ArrayList<>();
+        String search = searchTerm.toLowerCase();
+        for (int i = 0; i < products.size(); i++) {
+            if (products.get(i).toLowerCase().contains(search)) {
+                searchResults.add(products.get(i));
+            }
+        }
+        return formatProducts(searchResults);
+    }
+
+    public ArrayList<String> sortQuantity() throws IOException {
+        ArrayList<String> products = getProducts();
 
     }
 }
