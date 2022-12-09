@@ -139,15 +139,16 @@ public class Client {
             //sender04
             String buyerFirstResponse = "";
             String sellerFirstResponse = "";
-            String[] buyerOptions = new String[8];
+            String[] buyerOptions = new String[9];
             buyerOptions[0] = "View All Available Products"; //done
-            buyerOptions[1] = "Sort The Marketplace";
+            buyerOptions[1] = "Sort The Marketplace"; //framed
             buyerOptions[2] = "Edit Account"; //done
             buyerOptions[3] = "Delete Account"; //done
             buyerOptions[4] = "View Cart"; //done
-            buyerOptions[5] = "Export Purchase History"; //may be a problem with the method
+            buyerOptions[5] = "Export Purchase History"; //done
             buyerOptions[6] = "Log Out"; //done
-            buyerOptions[7] = "View a Product's Details"; //almost
+            buyerOptions[7] = "View a Product's Details"; //done
+            buyerOptions[8] = "Search"; //done
             if (theUserAccountType == 1) {  //buyer
                 boolean whileBuying = false;
                 do {
@@ -165,6 +166,22 @@ public class Client {
 
                         JOptionPane.showInputDialog(null, "Here are all of the available products!", "Market", JOptionPane.INFORMATION_MESSAGE, null, allProducts, allProducts[0]);
                     } else if (buyerFirstResponse.equals((buyerOptions[1]))) { //sort
+                        String[] sortType = new String[2];
+                        sortType[0] = "Price";
+                        sortType[1] = "Quantity";
+                        String sortResponse = (String) JOptionPane.showInputDialog(null, "What would you like to change?", "Market", JOptionPane.INFORMATION_MESSAGE, null, sortType, sortType[0]);
+                        send.println(sortResponse);
+                        send.flush();
+
+                        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                        Object object = oi.readObject();
+                        ArrayList<String> temp = (ArrayList<String>) object;
+                        String[] sorted = new String[temp.size()];
+
+                        temp.toArray(sorted);
+                        String sortedProductsResponse = (String) JOptionPane.showInputDialog(null, "Here are the sorted products:", "Market", JOptionPane.INFORMATION_MESSAGE, null, sorted, sorted[0]);
+
+
 
 
                     } else if (buyerFirstResponse.equals((buyerOptions[2]))) { // edit account
@@ -423,6 +440,18 @@ public class Client {
 
                         JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
+                    } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
+                        String searchTerm = (String) JOptionPane.showInputDialog(null, "Search:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(searchTerm);
+                        send.flush();
+                        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                        Object object = oi.readObject();
+                        ArrayList<String> temp = (ArrayList<String>) object;
+                        ArrayList<String> searchProducts = new ArrayList<>();
+                        searchProducts.addAll(temp);
+                        String[] completeList = new String[searchProducts.size()];
+                        searchProducts.toArray(completeList);
+                        String searchResponse = (String) JOptionPane.showInputDialog(null, "Here are the results:", "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
 
 
                     }
@@ -440,7 +469,7 @@ public class Client {
 
             //START OF SELLER
             if (theUserAccountType == 2) {
-                String[] sellerOptions = new String[9];
+                String[] sellerOptions = new String[10];
                 sellerOptions[0] = "Edit Account"; //done
                 sellerOptions[1] = "Delete Account"; //done
                 sellerOptions[2] = "Create New Product"; //done
@@ -450,6 +479,7 @@ public class Client {
                 sellerOptions[6] = "Export File"; //done?
                 sellerOptions[7] = "Log Out"; //done
                 sellerOptions[8] = "View Store Statistics";
+                sellerOptions[9] = "View Cart Information";
                 boolean whileSelling = false;
                 do {
                     JOptionPane.showMessageDialog(null, "Welcome Seller!", "Market", JOptionPane.INFORMATION_MESSAGE);
