@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.plaf.IconUIResource;
 import java.awt.*;
 import java.io.*;
 import java.net.*;
@@ -139,10 +140,22 @@ public class Server {
 
             do {
                 String buyerFirstResponse = receive.readLine();
-                if (buyerFirstResponse.equals(buyerOptions[0])) {
+                if (buyerFirstResponse.equals(buyerOptions[0])) { //view all products
+                    int sizeOfProductsArray = buy.formatProducts().size();
+                    String[] fillingList = new String[sizeOfProductsArray];
+                    for (int i = 0; i < sizeOfProductsArray; i++) {
+                        fillingList[i] = buy.formatProducts().get(i);
+                    }
+                    try {
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(fillingList);
+                    } catch (Exception e) {
+                        String n = "n";
+                    }
 
 
-                } else if (buyerFirstResponse.equals((buyerOptions[1]))) {
+
+                } else if (buyerFirstResponse.equals((buyerOptions[1]))) { //sort
 
 
                 } else if (buyerFirstResponse.equals((buyerOptions[2]))) {
@@ -269,7 +282,7 @@ public class Server {
                         ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                         objectOutput.writeObject(cart);
                     } catch (Exception e) {
-                        String n  = "n";
+                        String n = "n";
                     }
 
                     String cartChoice = receive.readLine();
@@ -381,15 +394,16 @@ public class Server {
 
         } else if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
             NewSeller sell = new NewSeller(edits.getUsername()); // gives access to seller methods
-            String[] sellerOptions = new String[8];
-            sellerOptions[0] = "Edit Account";
-            sellerOptions[1] = "Delete Account";
-            sellerOptions[2] = "Create New Product";
-            sellerOptions[3] = "Edit Product";
-            sellerOptions[4] = "Delete Product";
-            sellerOptions[5] = "Import Product File";
-            sellerOptions[6] = "Export File";
-            sellerOptions[7] = "Log Out";
+            String[] sellerOptions = new String[9];
+            sellerOptions[0] = "Edit Account"; //done
+            sellerOptions[1] = "Delete Account"; //done
+            sellerOptions[2] = "Create New Product"; //done
+            sellerOptions[3] = "Edit Product"; //done
+            sellerOptions[4] = "Delete Product"; //done
+            sellerOptions[5] = "Import Product File"; //done?
+            sellerOptions[6] = "Export File"; //done?
+            sellerOptions[7] = "Log Out"; //done
+            sellerOptions[8] = "View Store Statistics";
             boolean whileSelling = false;
 
             do {
@@ -584,13 +598,60 @@ public class Server {
                         send.flush();
                     }
 
-                } else if (sellerResponse.equals(sellerOptions[5])) {
+                } else if (sellerResponse.equals(sellerOptions[5])) { //import product file
+                    String pathName = receive.readLine();
+                    try {
+                        boolean check = sell.importFile(pathName);
+                        if (check) {
+                            String confirm = "y";
+                            send.println(confirm);
+                            send.flush();
+                        } else if (!check) {
+                            String confirm = "n";
+                            send.println(confirm);
+                            send.flush();
+                        }
+                    } catch (Exception e) {
+                        String confirm = "n";
+                    }
 
 
-                } else if (sellerResponse.equals(sellerOptions[6])) {
+                } else if (sellerResponse.equals(sellerOptions[6])) { //export
+                    String pathName = receive.readLine(); //receiver pathName
+                    try {
+                        boolean check = sell.exportFile(pathName);
+                        if (check) {
+                            String confirm = "y";
+                            send.println(confirm);
+                            send.flush();
+                        } else if (!check) {
+                            String confirm = "n";
+                            send.println(confirm);
+                            send.flush();
+                        }
+                    } catch (Exception e) {
+                        String confirm = "n";
+                        send.println(confirm);
+                        send.flush();
+                    }
 
                 } else if (sellerResponse.equals(sellerOptions[7])) { //log out
                     whileSelling = true;
+                } else if (sellerResponse.equalsIgnoreCase(sellerOptions[8])) { //store stats
+                    String storeName = receive.readLine();
+                    try {
+                        ArrayList<String> log;
+                        log = sell.sellerLog(storeName);
+                        try {
+                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                            objectOutput.writeObject(log);
+                        } catch (Exception e) {
+                            String hitwo = "";
+                        }
+
+                    } catch (Exception e) {
+                        String hi = "";
+                    }
                 }
             } while (whileSelling == false);
 
