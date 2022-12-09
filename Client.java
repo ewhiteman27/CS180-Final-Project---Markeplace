@@ -159,13 +159,11 @@ public class Client {
                     //sender 05
 
                     if (buyerFirstResponse.equals(buyerOptions[0])) { //view all products
-                        int sizeOfProductsArray = product.getProducts().size();
-                        String[] fillingList = new String[sizeOfProductsArray];
-                        for (int i = 0; i < sizeOfProductsArray; i++) {
-                            fillingList[i] = product.getProducts().get(i);
-                        }
+                        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                        Object object = oi.readObject();
+                        String[] allProducts = (String[]) object;
 
-                        JOptionPane.showInputDialog(null, "Here are all of the available products!", "Market", JOptionPane.INFORMATION_MESSAGE, null, fillingList, fillingList[0]);
+                        JOptionPane.showInputDialog(null, "Here are all of the available products!", "Market", JOptionPane.INFORMATION_MESSAGE, null, allProducts, allProducts[0]);
                     } else if (buyerFirstResponse.equals((buyerOptions[1]))) { //sort
 
 
@@ -421,8 +419,9 @@ public class Client {
                         send.flush();
 
                         String confirm = receive.readLine(); //confirm details
+                        String finalConfirm = confirm.replaceAll(";", "\n");
 
-                        JOptionPane.showMessageDialog(null, confirm, "Market", JOptionPane.INFORMATION_MESSAGE);
+                        JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
 
 
@@ -441,15 +440,16 @@ public class Client {
 
             //START OF SELLER
             if (theUserAccountType == 2) {
-                String[] sellerOptions = new String[8];
+                String[] sellerOptions = new String[9];
                 sellerOptions[0] = "Edit Account"; //done
                 sellerOptions[1] = "Delete Account"; //done
                 sellerOptions[2] = "Create New Product"; //done
                 sellerOptions[3] = "Edit Product"; //done
                 sellerOptions[4] = "Delete Product"; //done
-                sellerOptions[5] = "Import Product File";
-                sellerOptions[6] = "Export File";
+                sellerOptions[5] = "Import Product File"; //done?
+                sellerOptions[6] = "Export File"; //done?
                 sellerOptions[7] = "Log Out"; //done
+                sellerOptions[8] = "View Store Statistics";
                 boolean whileSelling = false;
                 do {
                     JOptionPane.showMessageDialog(null, "Welcome Seller!", "Market", JOptionPane.INFORMATION_MESSAGE);
@@ -650,13 +650,63 @@ public class Client {
 
                         }
 
-                    } else if (sellerFirstResponse.equals(sellerOptions[5])) {
+                    } else if (sellerFirstResponse.equals(sellerOptions[5])) { //import file
+                        String pathName = JOptionPane.showInputDialog(null, "Enter the path name of the file:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(pathName);
+                        send.flush();//sender path name
 
-                    } else if (sellerFirstResponse.equals(sellerOptions[6])) {
+                        String confirm = receive.readLine();
+
+                        if (confirm.equalsIgnoreCase("y")) {
+                            JOptionPane.showMessageDialog(null, "File was successfully imported!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                        } else if (confirm.equalsIgnoreCase("n")) {
+                            JOptionPane.showMessageDialog(null, "File failed to import!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        }
+
+                    } else if (sellerFirstResponse.equals(sellerOptions[6])) { //export file
+                        String pathName = JOptionPane.showInputDialog(null, "Enter the desired path name:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(pathName);
+                        send.flush();
+
+                        String confirm = receive.readLine();
+                        if (confirm.equalsIgnoreCase("y")) {
+                            JOptionPane.showMessageDialog(null, "File was successfully exported!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                        } else if (confirm.equalsIgnoreCase("n")) {
+                            JOptionPane.showMessageDialog(null, "File failed to export!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                        }
+
 
                     } else if (sellerFirstResponse.equals(sellerOptions[7])) { //log out
                         JOptionPane.showMessageDialog(null, "Thank you for using the Market!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         whileSelling = true;
+                    } else if (sellerFirstResponse.equals(sellerOptions[8])) {
+                        String storeName = JOptionPane.showInputDialog(null, "Enter the name of the store that you wish to see the statistics for:" , "Market", JOptionPane.INFORMATION_MESSAGE);
+                        send.println(storeName);
+                        send.flush();
+
+                        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                        Object object = oi.readObject();
+                        ArrayList<String> temp = (ArrayList<String>) object;
+                        ArrayList<String> logItems = new ArrayList<>();
+
+
+                        for (int i = 0; i < temp.size(); i++) {
+                            logItems.add(temp.get(i));
+                        }
+                        if (logItems.size() > 0) {
+                            String[] completeList = new String[logItems.size()];
+                            logItems.toArray(completeList);
+                            sellerFirstResponse = (String) JOptionPane.showInputDialog(null, "Statistics", "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+
+                        } else {
+                            String[] completeList = new String[1];
+                            completeList[1] = "n";
+                            JOptionPane.showMessageDialog(null, "No statistics to show!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                        }
+
                     }
 
                 } while (whileSelling == false);
@@ -664,7 +714,7 @@ public class Client {
 
 
         } catch (Exception e) {
-            throw e;
+            String simon = "Says do nothing";
         }
 
 
