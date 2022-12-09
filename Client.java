@@ -144,7 +144,7 @@ public class Client {
             buyerOptions[1] = "Sort The Marketplace"; //framed
             buyerOptions[2] = "Edit Account"; //done
             buyerOptions[3] = "Delete Account"; //done
-            buyerOptions[4] = "View Cart"; //done
+            buyerOptions[4] = "View, Purchase, Add/Remove Items From Cart"; //done
             buyerOptions[5] = "Export Purchase History"; //done
             buyerOptions[6] = "Log Out"; //done
             buyerOptions[7] = "View a Product's Details"; //done
