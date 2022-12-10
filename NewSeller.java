@@ -64,11 +64,11 @@ public class NewSeller extends NewProduct {
             while (line != null) {
                 String[] product = line.split(",");
                 if (product.length == 6) {
-                    writeNewProduct(products, product[0], product[1], product[2], product[3],
-                            Integer.parseInt(product[4]), Double.parseDouble(product[5]));
+                    products.add(line);
                 }
                 line = bfr.readLine();
             }
+            writeProduct(products);
             bfr.close();
             fr.close();
             return true;
