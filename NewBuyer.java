@@ -173,4 +173,16 @@ public class NewBuyer extends NewProduct {
         }
         return sortedProducts;
     }
+
+    public ArrayList<String> getBuyerCart() throws IOException {
+        ArrayList<String> cart = getCart();
+        ArrayList<String> buyerCart = new ArrayList<>();
+        for (int i = 0; i < cart.size(); i++) {
+            String[] item = cart.get(i).split(",");
+            if (item[6].equalsIgnoreCase(username)) {
+                buyerCart.add(cart.get(i));
+            }
+        }
+        return buyerCart;
+    }
 }
