@@ -289,17 +289,12 @@ public class Server {
                     //sender 21
 
                 } else if (buyerFirstResponse.equals((buyerOptions[4]))) { //view cart plus
-                    String[] cartOptions = new String[3];
+                    String[] cartOptions = new String[4];
                     cartOptions[0] = "Add Item to Cart";
                     cartOptions[1] = "Remove Item From Cart";
                     cartOptions[2] = "Go Back to Main Menu";
-                    ArrayList<String> cart = buy.getCart();
-                    try {
-                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                        objectOutput.writeObject(cart);
-                    } catch (Exception e) {
-                        String n = "n";
-                    }
+                    cartOptions[3] = "View Items in Cart";
+
 
                     String cartChoice = receive.readLine();
                     if (cartChoice.equalsIgnoreCase("purchase")) {
@@ -345,9 +340,18 @@ public class Server {
                         }
 
                     } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
-                        String confirmRemove = "";
+                        ArrayList<String> cart = buy.getCart();
+                        try {
+                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                            objectOutput.writeObject(cart);
+                        } catch (Exception e) {
+                            String n = "n";
+                        }
                         String storeName = receive.readLine();
                         String productName = receive.readLine();
+                        String confirmRemove;
+
+
                         try {
                             boolean remove = buy.removeFromCart(storeName, productName);
                             if (remove) {
@@ -364,8 +368,16 @@ public class Server {
                         }
 
 
-                    } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) {
+                    } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
                         String haha = "Smile and Wave";
+                    } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
+                        ArrayList<String> cart = buy.getCart();
+                        try {
+                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                            objectOutput.writeObject(cart);
+                        } catch (Exception e) {
+                            String n = "n";
+                        }
                     }
 
                 } else if (buyerFirstResponse.equals((buyerOptions[5]))) { //export purchase history
