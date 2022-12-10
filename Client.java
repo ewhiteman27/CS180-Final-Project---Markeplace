@@ -307,34 +307,17 @@ public class Client {
                                     "username/password was incorrect!", "Market", JOptionPane.INFORMATION_MESSAGE);
                         }
                     } else if (buyerFirstResponse.equals((buyerOptions[4]))) {  //view cart also add and remove items are also here
-                        String[] cartOptions = new String[3];
+                        String[] cartOptions = new String[4];
                         cartOptions[0] = "Add Item to Cart";
                         cartOptions[1] = "Remove Item From Cart";
                         cartOptions[2] = "Go Back to Main Menu";
-                        String [] cartOptionsTwo = new String[2];
-                        cartOptionsTwo[0] = "Add Item to Cart";
-                        cartOptionsTwo[1] = "Go Back to Main Menu";
+                        cartOptions[3] = "View Items in Cart";
                         String cartResponse = ""; // what the buyer chooses to do in the cart
                         try {
-                            ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
-                            Object object = oi.readObject();
-                            ArrayList<String> temp = (ArrayList<String>) object;
-                            ArrayList<String> allProducts = new ArrayList<>();
-                            allProducts.add("Purchase");
-                            allProducts.add(cartOptions[0]);
-                            allProducts.add(cartOptions[1]);
-                            allProducts.add(cartOptions[2]);
-                            for (int i = 0; i < temp.size(); i++) {
-                                allProducts.add(temp.get(i));
-                            }
-                            String[] completeList = new String[allProducts.size()];
-                            allProducts.toArray(completeList);
                             //end of formatting the arraylist of products
                             boolean goCart = true;
                             do {
-                                JOptionPane.showMessageDialog(null, "Select ONE of the following options\nRemove Item From Cart\nAdd Item to Cart\nPurchase\nGo Back to Main Menu ", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                cartResponse = (String) JOptionPane.showInputDialog(null, "Select an action", "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+                                cartResponse = (String) JOptionPane.showInputDialog(null, "Select an action", "Market", JOptionPane.INFORMATION_MESSAGE, null, cartOptions, cartOptions[0]);
                                 if (cartResponse.equals(null)) {
 
                                 }
@@ -348,6 +331,9 @@ public class Client {
                                     goCart = false;
                                 }
                                 if (cartResponse.equalsIgnoreCase(cartOptions[2])) {
+                                    goCart = false;
+                                }
+                                if (cartResponse.equalsIgnoreCase(cartOptions[3])) {
                                     goCart = false;
                                 }
                             } while (goCart);
@@ -389,8 +375,16 @@ public class Client {
                             }
 
                         } else if (cartResponse.equalsIgnoreCase(cartOptions[1])) { // remove item
-                            String storeName = (String) JOptionPane.showInputDialog(null, "Enter the name of the store that carries the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
-                            String productName = (String) JOptionPane.showInputDialog(null, "Enter the name of the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                            Object object = oi.readObject();
+                            ArrayList<String> temp = (ArrayList<String>) object;
+                            ArrayList<String> allProducts = temp;
+                            String[] completeList = new String[allProducts.size()];
+                            allProducts.toArray(completeList);
+                            String removeThis = (String) JOptionPane.showInputDialog(null, "Select an item to remove it.", "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+                            String[] parts = removeThis.split(",");
+                            String storeName = parts[1];
+                            String productName = parts[2];
                             send.println(storeName);   //sender remove from cart
                             send.flush();
                             send.println(productName);
@@ -407,6 +401,21 @@ public class Client {
 
                         } else if (cartResponse.equalsIgnoreCase(cartOptions[2])) { //go back to main menu
 
+
+                        } else if (cartResponse.equalsIgnoreCase(cartOptions[3])) { //view cart
+                            ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                            Object object = oi.readObject();
+                            ArrayList<String> temp = (ArrayList<String>) object;
+                            ArrayList<String> allProducts = temp;
+                            String[] completeList = new String[allProducts.size()];
+                            allProducts.toArray(completeList);
+
+                            if (allProducts.isEmpty()) {
+                                JOptionPane.showMessageDialog(null, "Your cart is empty", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                String trash = (String) JOptionPane.showInputDialog(null, "Here are the items in your cart:", "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+
+                            }
 
                         }
 
