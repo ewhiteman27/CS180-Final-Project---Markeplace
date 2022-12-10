@@ -29,93 +29,95 @@ public class Server {
         boolean logInMenu = false;
         do {
             String choice = receive.readLine(); //reads if user creates an account or logs in
-            User user = new User();
-            boolean hasTheAccountBeenCreated = false;
-            if (choice.equals(createLogIn[0])) {
-                //Verifying that creating an account is successful
-                do {
-
-                    String username = receive.readLine();
-
-                    String password = receive.readLine();
-
-                    String email = receive.readLine();
-
-                    String buyerSeller = receive.readLine();
-
-                    //Receiver 01
-
-
-                    if (buyerSeller.equalsIgnoreCase("buyer")) {
-                        try {
-                            user = user.createAccount(username, email, password, 1);
-                            String yVariable = "y";
-                            send.println(yVariable); // Reader on 54
-                            send.flush();
-                            hasTheAccountBeenCreated = true;
-                        } catch (Exception e) {
-                            String xVariable = "x";
-                            send.println(xVariable); // Reader on 54
-                            send.flush();
-
-                        }
-                    } else if (buyerSeller.equalsIgnoreCase("seller")) {
-                        try {
-                            user = user.createAccount(username, email, password, 2);
-                            String yVariable = "y";
-                            send.println(yVariable); // Reader on 54
-                            send.flush();
-                            hasTheAccountBeenCreated = true;
-                        } catch (Exception e) {
-                            String xVariable = "x";
-                            send.println(xVariable);
-                            send.flush();
-                        }
-                    }
-                } while (hasTheAccountBeenCreated == false);
-
-                //end of account creation
-
-
-            } else if (choice.equals(createLogIn[1])) { //LOGGING IN
-                boolean hasLoggedIn = false;
-
-                String confirmLogIn = receive.readLine();
-                //receiver 02
-
-                if (confirmLogIn.equalsIgnoreCase("1")) {
-                    logInMenu = false;
-                } else {
-                    logInMenu = true;
+            if (choice != null) {
+                User user = new User();
+                boolean hasTheAccountBeenCreated;
+                if (choice.equals(createLogIn[0])) {
+                    //Verifying that creating an account is successful
                     do {
+
                         String username = receive.readLine();
+                        if (username != null) {
 
-                        String password = receive.readLine();
-                        //Receiver 03
+                            String password = receive.readLine();
+                            if (password != null) {
+                                String email = receive.readLine();
+                                if (email != null) {
+                                    String buyerSeller = receive.readLine();
+                                    if (buyerSeller != null) {
+                                        if (buyerSeller.equalsIgnoreCase("buyer")) {
+                                            try {
+                                                user = user.createAccount(username, email, password, 1);
+                                                String yVariable = "y";
+                                                send.println(yVariable); // Reader on 54
+                                                send.flush();
+                                                hasTheAccountBeenCreated = true;
+                                            } catch (Exception e) {
+                                                String xVariable = "x";
+                                                send.println(xVariable); // Reader on 54
+                                                send.flush();
 
-                        try {
-
-                            user = user.logIn(username, password);
-                            edits = user;
-                            hasLoggedIn = true;
-                            String yOrn = "y";
-                            send.println(yOrn);
-                            send.flush();
-                            hasLoggedIn = true;
-                            send.println(user.getAccountType());
-                            send.flush();
-
-                        } catch (Exception e) { //exception is caught when user fails to log in
-
-                            String yOrn = "n";
-                            send.println(yOrn);
-                            send.flush();
+                                            }
+                                        } else if (buyerSeller.equalsIgnoreCase("seller")) {
+                                            try {
+                                                user = user.createAccount(username, email, password, 2);
+                                                String yVariable = "y";
+                                                send.println(yVariable); // Reader on 54
+                                                send.flush();
+                                            } catch (Exception e) {
+                                                String xVariable = "x";
+                                                send.println(xVariable);
+                                                send.flush();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
+                        hasTheAccountBeenCreated = true;
+
+
+                        //Receiver 01
+
+
+                    } while (hasTheAccountBeenCreated == false);
+
+                    //end of account creation
+
+
+                } else if (choice.equals(createLogIn[1])) { //LOGGING IN
+                    boolean hasLoggedIn = false;
+                    do {
+
+                        String username = receive.readLine();
+                        if (username != null) {
+                            String password = receive.readLine();
+                            if (password != null) {
+                                try {
+                                    user = user.logIn(username, password);
+                                    edits = user;
+                                    String yOrn = "y";
+                                    send.println(yOrn);
+                                    send.flush();
+                                    send.println(user.getAccountType());
+                                    send.flush();
+                                    logInMenu = true;
+
+                                } catch (Exception e) { //exception is caught when user fails to log in
+
+                                    String yOrn = "n";
+                                    send.println(yOrn);
+                                    send.flush();
+                                }
+
+                            }
+                        }
+
+                        hasLoggedIn = true;
 
                     } while (hasLoggedIn == false);
+
                 }
-
-
             }
         } while (logInMenu == false);
         //end of login portion
@@ -340,38 +342,41 @@ public class Server {
                         }
 
                     } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
-                        ArrayList<String> cart = buy.getCart();
+                        ArrayList<String> cart = buy.getBuyerCart();
                         try {
                             ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                             objectOutput.writeObject(cart);
                         } catch (Exception e) {
                             String n = "n";
                         }
-                        String storeName = receive.readLine();
-                        String productName = receive.readLine();
-                        String confirmRemove;
+                        String goStop = receive.readLine();
+                        if (goStop.equalsIgnoreCase("go")) {
+                            String storeName = receive.readLine();
+                            String productName = receive.readLine();
+                            String confirmRemove;
 
 
-                        try {
-                            boolean remove = buy.removeFromCart(storeName, productName);
-                            if (remove) {
-                                confirmRemove = "y";
-                            } else {
+                            try {
+                                boolean remove = buy.removeFromCart(storeName, productName);
+                                if (remove) {
+                                    confirmRemove = "y";
+                                } else {
+                                    confirmRemove = "n";
+                                }
+                                send.println(confirmRemove);
+                                send.flush();
+                            } catch (Exception e) {
                                 confirmRemove = "n";
+                                send.println(confirmRemove);
+                                send.flush();
                             }
-                            send.println(confirmRemove);
-                            send.flush();
-                        } catch (Exception e) {
-                            confirmRemove = "n";
-                            send.println(confirmRemove);
-                            send.flush();
                         }
 
 
                     } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
                         String haha = "Smile and Wave";
                     } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
-                        ArrayList<String> cart = buy.getCart();
+                        ArrayList<String> cart = buy.getBuyerCart();
                         try {
                             ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                             objectOutput.writeObject(cart);
