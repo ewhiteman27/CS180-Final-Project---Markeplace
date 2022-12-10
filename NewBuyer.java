@@ -185,4 +185,45 @@ public class NewBuyer extends NewProduct {
         }
         return buyerCart;
     }
+     public void reviewProducts(String storeName, String productName, String writtenReview) throws IOException {
+        File f = new File("Reviews.txt");
+        ArrayList<String> totalReviews = new ArrayList<String>();
+        f.createNewFile();
+        FileReader fr = new FileReader(f);
+        BufferedReader bfr = new BufferedReader(fr);
+        FileWriter fw = new FileWriter(f , false);
+        PrintWriter pw = new PrintWriter(fw);
+        ArrayList<String> products = getProducts();
+        for (int i = 0; i < products.size(); i++) {
+            String[] productInCart = products.get(i).split(",");
+            if (productInCart[1].equalsIgnoreCase(storeName) && productInCart[2].equalsIgnoreCase(productName)) {
+                String reviewLine = String.format("%s,%s,%s,%s", storeName, productName, username, writtenReview);
+                totalReviews.add(reviewLine);
+                pw.println(reviewLine);
+            }
+        }
+        pw.close();
+        fw.close();
+    }
+    
+    public ArrayList<String> reviewForSpecificProduct(String storeName, String productName) throws IOException {
+        File f = new File("Reviews.txt");
+        ArrayList<String> reviews = new ArrayList<String>();
+        f.createNewFile();
+        FileReader fr = new FileReader(f);
+        BufferedReader bfr = new BufferedReader(fr);
+        String line = bfr.readLine();
+        while (line != null) {
+            String[] splitTheReviews = line.split(","); 
+            if (splitTheReviews.length == 4 && splitTheReviews[0].equalsIgnoreCase(storeName) && 
+                    splitTheReviews[1].equalsIgnoreCase(productName)) {
+                String formattedReview = String.format("%s - %s", username, splitTheReviews[3]);
+                reviews.add(formattedReview);
+            }
+            line = bfr.readLine();
+        }
+        bfr.close();
+        fr.close();
+        return reviews;
+    }
 }
