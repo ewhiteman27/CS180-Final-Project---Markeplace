@@ -58,7 +58,7 @@ public class Client {
                             send.println(username);
                             send.flush();
                             if (username != null) {
-                                password = (String) JOptionPane.showInputDialog(null, "Please enter a Password", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                password = (String) JOptionPane.showInputDialog(null, "Please enter a Password (Password must be greater than 8 characters)", "Market", JOptionPane.INFORMATION_MESSAGE);
                                 send.println(password);
                                 send.flush();
                                 if (password != null) {
