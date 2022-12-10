@@ -120,7 +120,6 @@ public class NewBuyer extends NewProduct {
         return count;
     }
 
-    // TODO: SEARCH AND SORT
     public ArrayList<String> searchProduct(String searchTerm) throws IOException {
         ArrayList<String> products = getProducts();
         ArrayList<String> searchResults = new ArrayList<>();
@@ -142,12 +141,12 @@ public class NewBuyer extends NewProduct {
             quantities.add(Integer.parseInt(product[4]));
         }
         quantities.sort(Comparator.naturalOrder());
-        for (int i = 0; i < products.size(); i++) {
-            int quantity = Integer.parseInt(products.get(i).split(",")[4]);
-            for (int j = 0; j < quantities.size(); j++) {
-                if (quantity == quantities.get(j)) {
-                    sortedProducts.add(products.get(i));
-                    products.remove(i);
+        for (int i = 0; i < quantities.size(); i++) {
+            for (int j = 0; j < products.size(); j++) {
+                int quantity = Integer.parseInt(products.get(j).split(",")[4]);
+                if (quantity == quantities.get(i)) {
+                    sortedProducts.add(products.get(j));
+                    products.remove(j);
                 }
             }
         }
@@ -163,15 +162,15 @@ public class NewBuyer extends NewProduct {
             prices.add(Double.parseDouble(product[5]));
         }
         prices.sort(Comparator.naturalOrder());
-        for (int i = 0; i < products.size(); i++) {
-            int price = Integer.parseInt(products.get(i).split(",")[5]);
-            for (int j = 0; j < prices.size(); j++) {
-                if (Math.abs(price - prices.get(i)) < 0.0001) {
-                    sortedProducts.add(products.get(i));
-                    products.remove(i);
+        for (int i = 0; i < prices.size(); i++) {
+            for (int j = 0; j < products.size(); j++) {
+                double price = Double.parseDouble(products.get(j).split(",")[5]);
+                if (Math.abs(prices.get(i) - price) < 0.001) {
+                    sortedProducts.add(products.get(j));
+                    products.remove(j);
                 }
             }
         }
-        return formatProducts(sortedProducts);
+        return sortedProducts;
     }
 }
