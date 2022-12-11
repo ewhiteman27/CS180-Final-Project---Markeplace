@@ -2,6 +2,12 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/**
+ * Project 5 - NewBuyer
+ * An updated Seller class including methods for adding and removal from an item cart,
+ * purchasing items, and leaving and reading product reviews
+ */
+
 public class NewBuyer extends NewProduct {
     String username;
 
@@ -11,6 +17,12 @@ public class NewBuyer extends NewProduct {
     }
 
     public boolean addToCart(String storeName, String productName, int quantity) throws IOException {
+        /**
+         * Adds the given item to the cart ArrayList in the specified quantity then updates
+         * the cart.txt file by calling the writeCart method in the NewProduct class. Returns
+         * true if the item is successfully added to the cart and false otherwise
+         */
+
         ArrayList<String> products = getProducts();
         ArrayList<String> cart = getCart();
         for (int i = 0; i < products.size(); i++) {
@@ -28,6 +40,12 @@ public class NewBuyer extends NewProduct {
     }
 
     public boolean removeFromCart(String storeName, String productName) throws IOException {
+        /**
+         * Removes any instance of the specified item being purchased by this user in the cart Arraylist
+         * then updates the cart.txt file by calling the writeCart method in the NewProduct class. Returns
+         * true if the item is successfully removed from the cart and false otherwise
+         */
+
         ArrayList<String> products = getProducts();
         ArrayList<String> cart = getCart();
         for (int i = 0; i < cart.size(); i++) {
@@ -43,6 +61,14 @@ public class NewBuyer extends NewProduct {
     }
 
     public boolean buy() throws IOException, NumberFormatException {
+        /**
+         * Buys the first item from this buyer in the cart by removing the item from the cart,
+         * adding it to the buyLog, and adjusting the quantity available, then updating the
+         * products.txt, cart.txt, and buyLog.txt files. In order to buy all items by this user,
+         * first use the numInCart method the run this method that many times. Returns true if
+         * the item is bought successfully and false otherwise
+         */
+
         ArrayList<String> products = getProducts();
         ArrayList<String> cart = getCart();
         ArrayList<String> buy = new ArrayList<String>();
@@ -77,6 +103,11 @@ public class NewBuyer extends NewProduct {
     }
 
     public String getFormattedProduct(String productName, String storeName) throws IOException {
+        /**
+         * Finds and reformats the given product so that all of the product's
+         * information is readable for users. Returns the reformatted String
+         */
+
         ArrayList<String> products = getProducts();
         for (int i = 0; i < products.size(); i++) {
             String[] product = products.get(i).split(",");
@@ -90,6 +121,12 @@ public class NewBuyer extends NewProduct {
     }
 
     public boolean exportFile(String pathname) throws IOException {
+        /**
+         * Returns false if the given file already exists, otherwise, creates
+         * the file, then writes all items in the buyLog ArrayList which were
+         * purchased by this user to the given file and returns true
+         */
+
         ArrayList<String> buyLog = getBuyLog();
         File f = new File(pathname);
         if (!f.exists()) {
@@ -109,6 +146,10 @@ public class NewBuyer extends NewProduct {
     }
 
     public int numInCart() throws IOException {
+        /**
+         * Returns the number of items in the cart that are being purchased by this user
+         */
+
         ArrayList<String> cart = getCart();
         int count = 0;
         for (int i = 0; i < cart.size(); i++) {
@@ -121,6 +162,10 @@ public class NewBuyer extends NewProduct {
     }
 
     public ArrayList<String> searchProduct(String searchTerm) throws IOException {
+        /**
+         * Returns an ArrayList of all products which contain the given search term
+         */
+
         ArrayList<String> products = getProducts();
         ArrayList<String> searchResults = new ArrayList<>();
         String search = searchTerm.toLowerCase();
@@ -133,6 +178,11 @@ public class NewBuyer extends NewProduct {
     }
 
     public ArrayList<String> sortQuantity() throws IOException, NumberFormatException {
+        /**
+         * Sorts the available products so that the products with the lowest quantity
+         * are first, then returns a formatted ArrayList of sorted products
+         */
+
         ArrayList<String> products = getProducts();
         ArrayList<Integer> quantities = new ArrayList<>();
         ArrayList<String> sortedProducts = new ArrayList<>();
@@ -154,6 +204,11 @@ public class NewBuyer extends NewProduct {
     }
 
     public ArrayList<String> sortPrice() throws IOException, NumberFormatException {
+        /**
+         * Sorts the available products so that the products with the lowest price
+         * are first, then returns a formatted ArrayList of sorted products
+         */
+
         ArrayList<String> products = getProducts();
         ArrayList<Double> prices = new ArrayList<>();
         ArrayList<String> sortedProducts = new ArrayList<>();
@@ -175,6 +230,10 @@ public class NewBuyer extends NewProduct {
     }
 
     public ArrayList<String> getBuyerCart() throws IOException {
+        /**
+         * Returns a non-formatted ArrayList of all items in the cart being purchased by this user
+         */
+
         ArrayList<String> cart = getCart();
         ArrayList<String> buyerCart = new ArrayList<>();
         for (int i = 0; i < cart.size(); i++) {
@@ -186,6 +245,10 @@ public class NewBuyer extends NewProduct {
         return buyerCart;
     }
      public void reviewProducts(String storeName, String productName, String writtenReview) throws IOException {
+         /**
+          * Adds a review to a product and updates the Reviews.txt file
+          */
+
         File f = new File("Reviews.txt");
         ArrayList<String> totalReviews = new ArrayList<String>();
         f.createNewFile();
@@ -207,6 +270,10 @@ public class NewBuyer extends NewProduct {
     }
     
     public ArrayList<String> reviewForSpecificProduct(String storeName, String productName) throws IOException {
+        /**
+         * Returns an ArrayList of all reviews for the given product
+         */
+
         File f = new File("Reviews.txt");
         ArrayList<String> reviews = new ArrayList<String>();
         f.createNewFile();
