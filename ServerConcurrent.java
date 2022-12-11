@@ -54,11 +54,11 @@ public class ServerConcurrent extends Thread {
                                                 try {
                                                     synchronized (LOCK) {
                                                         user = user.createAccount(username, email, password, 1);
+                                                        String yVariable = "y";
+                                                        send.println(yVariable); // Reader on 54
+                                                        send.flush();
+                                                        hasTheAccountBeenCreated = true;
                                                     }
-                                                    String yVariable = "y";
-                                                    send.println(yVariable); // Reader on 54
-                                                    send.flush();
-                                                    hasTheAccountBeenCreated = true;
                                                 } catch (Exception e) {
                                                     String xVariable = "x";
                                                     send.println(xVariable); // Reader on 54
@@ -69,10 +69,10 @@ public class ServerConcurrent extends Thread {
                                                 try {
                                                     synchronized (LOCK) {
                                                         user = user.createAccount(username, email, password, 2);
+                                                        String yVariable = "y";
+                                                        send.println(yVariable); // Reader on 54
+                                                        send.flush();
                                                     }
-                                                    String yVariable = "y";
-                                                    send.println(yVariable); // Reader on 54
-                                                    send.flush();
                                                 } catch (Exception e) {
                                                     String xVariable = "x";
                                                     send.println(xVariable);
@@ -105,14 +105,14 @@ public class ServerConcurrent extends Thread {
                                     try {
                                         synchronized (LOCK) {
                                             user = user.logIn(username, password);
+                                            edits = user;
+                                            String yOrn = "y";
+                                            send.println(yOrn);
+                                            send.flush();
+                                            send.println(user.getAccountType());
+                                            send.flush();
+                                            logInMenu = true;
                                         }
-                                        edits = user;
-                                        String yOrn = "y";
-                                        send.println(yOrn);
-                                        send.flush();
-                                        send.println(user.getAccountType());
-                                        send.flush();
-                                        logInMenu = true;
 
                                     } catch (Exception e) { //exception is caught when user fails to log in
 
@@ -132,6 +132,8 @@ public class ServerConcurrent extends Thread {
                 }
             } while (logInMenu == false);
             //end of login portion
+
+
 
 
             String userAccountType = receive.readLine(); //checks to see if the user is a buyer or seller
@@ -167,9 +169,9 @@ public class ServerConcurrent extends Thread {
                             } catch (Exception e) {
                                 String n = "n";
                             }
+
+
                         }
-
-
                     } else if (buyerFirstResponse.equals((buyerOptions[1]))) { //sort
                         String[] sortType = new String[2];
                         sortType[0] = "Price";
@@ -189,6 +191,9 @@ public class ServerConcurrent extends Thread {
                                 objectOutput.writeObject(sort);
                             }
                         }
+
+
+
 
 
                     } else if (buyerFirstResponse.equals((buyerOptions[2]))) {
@@ -225,7 +230,6 @@ public class ServerConcurrent extends Thread {
                                     } else {
                                         confirmChange = "false";
                                     }
-
 
                                     send.println(confirmChange);
                                     send.flush();
@@ -433,17 +437,19 @@ public class ServerConcurrent extends Thread {
                                             }
                                         }
                                     }
-
                                 }
+
                             } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
                                 String haha = "Smile and Wave";
                             } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
-                                ArrayList<String> cart = buy.getBuyerCart();
-                                try {
-                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                                    objectOutput.writeObject(cart);
-                                } catch (Exception e) {
-                                    String n = "n";
+                                synchronized (LOCK) {
+                                    ArrayList<String> cart = buy.getBuyerCart();
+                                    try {
+                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                        objectOutput.writeObject(cart);
+                                    } catch (Exception e) {
+                                        String n = "n";
+                                    }
                                 }
                             }
                         }
@@ -531,6 +537,30 @@ public class ServerConcurrent extends Thread {
                     }
 
                 } while (whileBuying == false);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
             } else if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
@@ -871,6 +901,8 @@ public class ServerConcurrent extends Thread {
 
 
             }
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
