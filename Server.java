@@ -29,93 +29,95 @@ public class Server {
         boolean logInMenu = false;
         do {
             String choice = receive.readLine(); //reads if user creates an account or logs in
-            User user = new User();
-            boolean hasTheAccountBeenCreated = false;
-            if (choice.equals(createLogIn[0])) {
-                //Verifying that creating an account is successful
-                do {
-
-                    String username = receive.readLine();
-
-                    String password = receive.readLine();
-
-                    String email = receive.readLine();
-
-                    String buyerSeller = receive.readLine();
-
-                    //Receiver 01
-
-
-                    if (buyerSeller.equalsIgnoreCase("buyer")) {
-                        try {
-                            user = user.createAccount(username, email, password, 1);
-                            String yVariable = "y";
-                            send.println(yVariable); // Reader on 54
-                            send.flush();
-                            hasTheAccountBeenCreated = true;
-                        } catch (Exception e) {
-                            String xVariable = "x";
-                            send.println(xVariable); // Reader on 54
-                            send.flush();
-
-                        }
-                    } else if (buyerSeller.equalsIgnoreCase("seller")) {
-                        try {
-                            user = user.createAccount(username, email, password, 2);
-                            String yVariable = "y";
-                            send.println(yVariable); // Reader on 54
-                            send.flush();
-                            hasTheAccountBeenCreated = true;
-                        } catch (Exception e) {
-                            String xVariable = "x";
-                            send.println(xVariable);
-                            send.flush();
-                        }
-                    }
-                } while (hasTheAccountBeenCreated == false);
-
-                //end of account creation
-
-
-            } else if (choice.equals(createLogIn[1])) { //LOGGING IN
-                boolean hasLoggedIn = false;
-
-                String confirmLogIn = receive.readLine();
-                //receiver 02
-
-                if (confirmLogIn.equalsIgnoreCase("1")) {
-                    logInMenu = false;
-                } else {
-                    logInMenu = true;
+            if (choice != null) {
+                User user = new User();
+                boolean hasTheAccountBeenCreated;
+                if (choice.equals(createLogIn[0])) {
+                    //Verifying that creating an account is successful
                     do {
+
                         String username = receive.readLine();
+                        if (username != null) {
 
-                        String password = receive.readLine();
-                        //Receiver 03
+                            String password = receive.readLine();
+                            if (password != null) {
+                                String email = receive.readLine();
+                                if (email != null) {
+                                    String buyerSeller = receive.readLine();
+                                    if (buyerSeller != null) {
+                                        if (buyerSeller.equalsIgnoreCase("buyer")) {
+                                            try {
+                                                user = user.createAccount(username, email, password, 1);
+                                                String yVariable = "y";
+                                                send.println(yVariable); // Reader on 54
+                                                send.flush();
+                                                hasTheAccountBeenCreated = true;
+                                            } catch (Exception e) {
+                                                String xVariable = "x";
+                                                send.println(xVariable); // Reader on 54
+                                                send.flush();
 
-                        try {
-
-                            user = user.logIn(username, password);
-                            edits = user;
-                            hasLoggedIn = true;
-                            String yOrn = "y";
-                            send.println(yOrn);
-                            send.flush();
-                            hasLoggedIn = true;
-                            send.println(user.getAccountType());
-                            send.flush();
-
-                        } catch (Exception e) { //exception is caught when user fails to log in
-
-                            String yOrn = "n";
-                            send.println(yOrn);
-                            send.flush();
+                                            }
+                                        } else if (buyerSeller.equalsIgnoreCase("seller")) {
+                                            try {
+                                                user = user.createAccount(username, email, password, 2);
+                                                String yVariable = "y";
+                                                send.println(yVariable); // Reader on 54
+                                                send.flush();
+                                            } catch (Exception e) {
+                                                String xVariable = "x";
+                                                send.println(xVariable);
+                                                send.flush();
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
+                        hasTheAccountBeenCreated = true;
+
+
+                        //Receiver 01
+
+
+                    } while (hasTheAccountBeenCreated == false);
+
+                    //end of account creation
+
+
+                } else if (choice.equals(createLogIn[1])) { //LOGGING IN
+                    boolean hasLoggedIn = false;
+                    do {
+
+                        String username = receive.readLine();
+                        if (username != null) {
+                            String password = receive.readLine();
+                            if (password != null) {
+                                try {
+                                    user = user.logIn(username, password);
+                                    edits = user;
+                                    String yOrn = "y";
+                                    send.println(yOrn);
+                                    send.flush();
+                                    send.println(user.getAccountType());
+                                    send.flush();
+                                    logInMenu = true;
+
+                                } catch (Exception e) { //exception is caught when user fails to log in
+
+                                    String yOrn = "n";
+                                    send.println(yOrn);
+                                    send.flush();
+                                }
+
+                            }
+                        }
+
+                        hasLoggedIn = true;
 
                     } while (hasLoggedIn == false);
+
                 }
-
-
             }
         } while (logInMenu == false);
         //end of login portion
@@ -128,7 +130,7 @@ public class Server {
 
         if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
             NewBuyer buy = new NewBuyer(edits.getUsername()); //gives access to buyer methods
-            String[] buyerOptions = new String[9];
+            String[] buyerOptions = new String[10];
             buyerOptions[0] = "View All Available Products"; //done
             buyerOptions[1] = "Sort The Marketplace"; //framed
             buyerOptions[2] = "Edit Account"; //done
@@ -138,6 +140,7 @@ public class Server {
             buyerOptions[6] = "Log Out"; //done
             buyerOptions[7] = "View a Product's Details"; //done
             buyerOptions[8] = "Search"; //done
+            buyerOptions[9] = "Leave a Review";
             boolean whileBuying = false;
 
             do {
@@ -165,11 +168,14 @@ public class Server {
                     ArrayList<String> sort = new ArrayList<>();
                     if (type.equalsIgnoreCase(sortType[0])) { //price
                         sort = buy.sortPrice();
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(sort);
                     } else if (type.equalsIgnoreCase(sortType[1])) { //quantity
                         sort = buy.sortQuantity();
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(sort);
                     }
-                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                    objectOutput.writeObject(sort);
+
 
 
 
@@ -181,6 +187,10 @@ public class Server {
                     editProfile[2] = "Change Email";
 
                     String editChoice = receive.readLine(); //receiver 06
+                    if (editChoice.equalsIgnoreCase("n")) {
+                        String doNothing = "HAHA";
+
+                    }
 
                     if (editChoice.equals(editProfile[0])) { //username change
 
@@ -192,19 +202,23 @@ public class Server {
 
                         String newUsernameStored = receive.readLine();
                         //receiver 09
+                        if (emailStored == null || passwordStored == null || newUsernameStored == null) {
 
-                        boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
-                        String confirmChange;
-
-                        if (changeUsername) {
-                            confirmChange = "true";
                         } else {
-                            confirmChange = "false";
-                        }
 
-                        send.println(confirmChange);
-                        send.flush();
-                        //sender 13
+                            boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
+                            String confirmChange;
+
+                            if (changeUsername) {
+                                confirmChange = "true";
+                            } else {
+                                confirmChange = "false";
+                            }
+
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 13
+                        }
 
                     } else if (editChoice.equals(editProfile[1])) {  //password change
                         String emailStored = receive.readLine();
@@ -215,24 +229,29 @@ public class Server {
 
                         String newPasswordStored = receive.readLine();
                         //receiver 12
-                        try {
-                            boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
-                            String confirmChange;
 
-                            if (changePassword) {
-                                confirmChange = "true";
-                            } else {
-                                confirmChange = "false";
+                        if (emailStored == null || usernameStored == null || newPasswordStored == null) {
+
+                        } else {
+                            try {
+                                boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                                String confirmChange;
+
+                                if (changePassword) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
+                                }
+
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
+                            } catch (Exception e) {
+                                String confirmChange = "false";
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
                             }
-
-                            send.println(confirmChange);
-                            send.flush();
-                            //sender 14
-                        } catch (Exception e) {
-                            String confirmChange = "false";
-                            send.println(confirmChange);
-                            send.flush();
-                            //sender 14
                         }
 
                     } else if (editChoice.equals(editProfile[2])) {  //emailchange
@@ -244,23 +263,27 @@ public class Server {
 
                         String newEmailStored = receive.readLine();
                         //receiver 17
-                        String confirmChange;
-                        try {
-                            boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+                        if (usernameStored == null || passwordStored == null || newEmailStored == null) {
 
-                            if (changeEmail) {
-                                confirmChange = "true";
-                            } else {
+                        } else {
+                            String confirmChange;
+                            try {
+                                boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+
+                                if (changeEmail) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
+                                }
+
+                            } catch (Exception e) {
                                 confirmChange = "false";
                             }
 
-                        } catch (Exception e) {
-                            confirmChange = "false";
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 18
                         }
-
-                        send.println(confirmChange);
-                        send.flush();
-                        //sender 18
 
                     }
 
@@ -270,147 +293,212 @@ public class Server {
 
                     String passwordStored = receive.readLine();
                     //receiver 20
+                    if (usernameStored == null || passwordStored == null) {
 
-                    String confirmDelete;
-                    try {
-                        boolean delete = edits.deleteAccount(usernameStored, passwordStored);
-                        if (delete) {
-                            confirmDelete = "true";
-                            whileBuying = true;
-                        } else {
+                    } else {
+
+                        String confirmDelete;
+                        try {
+                            boolean delete = edits.deleteAccount(usernameStored, passwordStored);
+                            if (delete) {
+                                confirmDelete = "true";
+                                whileBuying = true;
+                            } else {
+                                confirmDelete = "false";
+                            }
+                        } catch (Exception e) {
                             confirmDelete = "false";
                         }
-                    } catch (Exception e) {
-                        confirmDelete = "false";
+
+                        send.println(confirmDelete);
+                        send.flush();
+                        //sender 21
                     }
 
-                    send.println(confirmDelete);
-                    send.flush();
-                    //sender 21
-
                 } else if (buyerFirstResponse.equals((buyerOptions[4]))) { //view cart plus
-                    String[] cartOptions = new String[4];
+                    String[] cartOptions = new String[5];
                     cartOptions[0] = "Add Item to Cart";
                     cartOptions[1] = "Remove Item From Cart";
                     cartOptions[2] = "Go Back to Main Menu";
                     cartOptions[3] = "View Items in Cart";
+                    cartOptions[4] = "Purchase";
 
 
                     String cartChoice = receive.readLine();
-                    if (cartChoice.equalsIgnoreCase("purchase")) {
-                        boolean purchased = true;
-                        int loop = buy.numInCart();
-                        for (int i = 0; i < loop; i++) {
-                            purchased = buy.buy();
-                            if (!purchased) {
-                                send.println("n");
-                                send.flush();
-                                break;
+                    if (cartChoice == null) {
+
+                    } else {
+                        if (cartChoice.equalsIgnoreCase("purchase")) {
+                            boolean purchased = true;
+                            int loop = buy.numInCart();
+                            for (int i = 0; i < loop; i++) {
+                                purchased = buy.buy();
+                                if (!purchased) {
+                                    send.println("n");
+                                    send.flush();
+                                    break;
+                                }
                             }
-                        }
-                        if (purchased) {
-                            send.println("y");
-                            send.flush();
-                        }
-
-                    }
-
-                    if (cartChoice.equalsIgnoreCase(cartOptions[0])) { //add to cart
-                        String storeName = receive.readLine();
-                        String productName = receive.readLine();
-                        String quantity = receive.readLine();
-                        try {
-                            int formatQuantity = Integer.parseInt(quantity);
-                            boolean bought = buy.addToCart(storeName, productName, formatQuantity);
-                            if (bought) {
-                                String confirmAdd = "y";
-                                send.println(confirmAdd);
+                            if (purchased) {
+                                send.println("y");
                                 send.flush();
+                            }
+
+                        }
+
+                        if (cartChoice.equalsIgnoreCase(cartOptions[0])) { //add to cart
+                            String storeName = receive.readLine();
+                            String productName = receive.readLine();
+                            String quantity = receive.readLine();
+                            if (storeName == null || quantity == null || productName == null) {
+
                             } else {
-                                String confirmAdd = "n";
-                                send.println(confirmAdd);
-                                send.flush();
+                                try {
+                                    int formatQuantity = Integer.parseInt(quantity);
+                                    boolean bought = buy.addToCart(storeName, productName, formatQuantity);
+                                    if (bought) {
+                                        String confirmAdd = "y";
+                                        send.println(confirmAdd);
+                                        send.flush();
+                                    } else {
+                                        String confirmAdd = "n";
+                                        send.println(confirmAdd);
+                                        send.flush();
+                                    }
+
+
+                                } catch (Exception e) {
+                                    String confirmAdd = "n";
+                                    send.println(confirmAdd);
+                                    send.flush(); //sender confirm add
+                                }
                             }
 
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
+                            ArrayList<String> cart = buy.getBuyerCart();
+                            try {
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                objectOutput.writeObject(cart);
+                            } catch (Exception e) {
+                                String n = "n";
+                            }
+                            String goStop = receive.readLine();
+                            if (goStop == null) {
 
-                        } catch (Exception e) {
-                            String confirmAdd = "n";
-                            send.println(confirmAdd);
-                            send.flush(); //sender confirm add
-                        }
-
-                    } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
-                        ArrayList<String> cart = buy.getCart();
-                        try {
-                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                            objectOutput.writeObject(cart);
-                        } catch (Exception e) {
-                            String n = "n";
-                        }
-                        String storeName = receive.readLine();
-                        String productName = receive.readLine();
-                        String confirmRemove;
-
-
-                        try {
-                            boolean remove = buy.removeFromCart(storeName, productName);
-                            if (remove) {
-                                confirmRemove = "y";
                             } else {
-                                confirmRemove = "n";
+                                if (goStop.equalsIgnoreCase("go")) {
+                                    String storeName = receive.readLine();
+                                    String productName = receive.readLine();
+                                    if (storeName == null || productName == null) {
+
+                                    } else {
+                                        String confirmRemove;
+
+
+                                        try {
+                                            boolean remove = buy.removeFromCart(storeName, productName);
+                                            if (remove) {
+                                                confirmRemove = "y";
+                                            } else {
+                                                confirmRemove = "n";
+                                            }
+                                            send.println(confirmRemove);
+                                            send.flush();
+                                        } catch (Exception e) {
+                                            confirmRemove = "n";
+                                            send.println(confirmRemove);
+                                            send.flush();
+                                        }
+                                    }
+                                }
                             }
-                            send.println(confirmRemove);
-                            send.flush();
-                        } catch (Exception e) {
-                            confirmRemove = "n";
-                            send.println(confirmRemove);
-                            send.flush();
-                        }
 
 
-                    } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
-                        String haha = "Smile and Wave";
-                    } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
-                        ArrayList<String> cart = buy.getCart();
-                        try {
-                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                            objectOutput.writeObject(cart);
-                        } catch (Exception e) {
-                            String n = "n";
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
+                            String haha = "Smile and Wave";
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
+                            ArrayList<String> cart = buy.getBuyerCart();
+                            try {
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                objectOutput.writeObject(cart);
+                            } catch (Exception e) {
+                                String n = "n";
+                            }
                         }
                     }
 
                 } else if (buyerFirstResponse.equals((buyerOptions[5]))) { //export purchase history
                     String filePath = receive.readLine(); //receiver filepath
-                    try {
-                        boolean export = buy.exportFile(filePath);
-                        String confirm;
-                        if (export) {
-                            confirm = "y";
-                        } else {
-                            confirm = "n";
+                    if (filePath == null) {
+
+                    } else {
+                        try {
+                            boolean export = buy.exportFile(filePath);
+                            String confirm;
+                            if (export) {
+                                confirm = "y";
+                            } else {
+                                confirm = "n";
+                            }
+                            send.println(confirm);
+                            send.flush();
+                        } catch (Exception e) {
+                            String confirm = "n";
+                            send.println(confirm);
+                            send.flush();
                         }
-                        send.println(confirm);
-                        send.flush();
-                    } catch (Exception e) {
-                        String confirm = "n";
-                        send.println(confirm);
-                        send.flush();
                     }
-                } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
+                } else if (buyerFirstResponse.equals((buyerOptions[6]))) { //logout
                     whileBuying = true;
-                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details  //IT is giving me each individual index instead of the combined string
+                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details
                     String storeName = receive.readLine();
                     String productName = receive.readLine();
-                    String withDescription = buy.getFormattedProduct(productName, storeName);
+                    if (storeName == null || productName == null) {
 
-                    send.println(withDescription);
-                    send.flush();
+                    } else {
+                        String withDescription = buy.getFormattedProduct(productName, storeName);
+                        ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
+                        if (reviews.isEmpty()) {
+
+                        } else {
+                            send.println(withDescription);
+                            send.flush();
+                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                            objectOutput.writeObject(reviews);
+                        }
+
+                    }
                 } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
                     String searchTerm = receive.readLine();
-                    ArrayList<String> results = buy.searchProduct(searchTerm);
-                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                    objectOutput.writeObject(results);
+                    if (searchTerm == null) {
+
+                    } else {
+                        ArrayList<String> results = buy.searchProduct(searchTerm);
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(results);
+                    }
+
+                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[9])) { //reviews
+                    String storeName = receive.readLine();
+                    String productName = receive.readLine();
+                    String review = receive.readLine();
+                    if (storeName == null || productName == null || review == null) {
+
+                    } else {
+                        try {
+                            buy.reviewProducts(storeName, productName, review);
+                            String confirm = "y";
+                            send.println(confirm);
+                            send.flush();
+                        } catch (Exception e) {
+                            String c = "n";
+                            send.println(c);
+                            send.flush();
+
+                        }
+
+
+                    }
 
                 }
 
@@ -466,44 +554,29 @@ public class Server {
                     editProfile[2] = "Change Email";
 
                     String editChoice = receive.readLine(); //receiver 06
+                    if (editChoice.equalsIgnoreCase("n")) {
+                        String doNothing = "HAHA";
+
+                    }
 
                     if (editChoice.equals(editProfile[0])) { //username change
 
                         String emailStored = receive.readLine();
-
+                        //receiver 07
 
                         String passwordStored = receive.readLine();
-
+                        //receiver 08
 
                         String newUsernameStored = receive.readLine();
+                        //receiver 09
+                        if (emailStored == null || passwordStored == null || newUsernameStored == null) {
 
-
-                        boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
-                        String confirmChange;
-
-                        if (changeUsername) {
-                            confirmChange = "true";
                         } else {
-                            confirmChange = "false";
-                        }
 
-                        send.println(confirmChange);
-                        send.flush();
-
-                    } else if (editChoice.equals(editProfile[1])) {  //password change
-                        String emailStored = receive.readLine();
-
-
-                        String usernameStored = receive.readLine();
-
-
-                        String newPasswordStored = receive.readLine();
-
-                        try {
-                            boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                            boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
                             String confirmChange;
 
-                            if (changePassword) {
+                            if (changeUsername) {
                                 confirmChange = "true";
                             } else {
                                 confirmChange = "false";
@@ -511,63 +584,102 @@ public class Server {
 
                             send.println(confirmChange);
                             send.flush();
+                            //sender 13
+                        }
 
-                        } catch (Exception e) {
-                            String confirmChange = "false";
-                            send.println(confirmChange);
-                            send.flush();
+                    } else if (editChoice.equals(editProfile[1])) {  //password change
+                        String emailStored = receive.readLine();
+                        //receiver 10
 
+                        String usernameStored = receive.readLine();
+                        //receiver 11
+
+                        String newPasswordStored = receive.readLine();
+                        //receiver 12
+
+                        if (emailStored == null || usernameStored == null || newPasswordStored == null) {
+
+                        } else {
+                            try {
+                                boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                                String confirmChange;
+
+                                if (changePassword) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
+                                }
+
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
+                            } catch (Exception e) {
+                                String confirmChange = "false";
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
+                            }
                         }
 
                     } else if (editChoice.equals(editProfile[2])) {  //emailchange
                         String usernameStored = receive.readLine();
-
+                        //receiver 15
 
                         String passwordStored = receive.readLine();
-
+                        //receiver 16
 
                         String newEmailStored = receive.readLine();
+                        //receiver 17
+                        if (usernameStored == null || passwordStored == null || newEmailStored == null) {
 
-                        String confirmChange;
-                        try {
-                            boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+                        } else {
+                            String confirmChange;
+                            try {
+                                boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
 
-                            if (changeEmail) {
-                                confirmChange = "true";
-                            } else {
+                                if (changeEmail) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
+                                }
+
+                            } catch (Exception e) {
                                 confirmChange = "false";
                             }
 
-                        } catch (Exception e) {
-                            confirmChange = "false";
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 18
                         }
 
-                        send.println(confirmChange);
-                        send.flush();
-
-
                     }
-
-                } else if (sellerResponse.equals(sellerOptions[1])) {
+                } else if (sellerResponse.equals(sellerOptions[1])) { //delete account
                     String usernameStored = receive.readLine();
+                    //receiver 19
 
                     String passwordStored = receive.readLine();
+                    //receiver 20
+                    if (usernameStored == null || passwordStored == null) {
 
-                    String confirmDelete;
-                    try {
-                        boolean delete = edits.deleteAccount(usernameStored, passwordStored);
-                        if (delete) {
-                            confirmDelete = "true";
-                            whileSelling = true;
-                        } else {
+                    } else {
+
+                        String confirmDelete;
+                        try {
+                            boolean delete = edits.deleteAccount(usernameStored, passwordStored);
+                            if (delete) {
+                                confirmDelete = "true";
+                                whileSelling = true;
+                            } else {
+                                confirmDelete = "false";
+                            }
+                        } catch (Exception e) {
                             confirmDelete = "false";
                         }
-                    } catch (Exception e) {
-                        confirmDelete = "false";
-                    }
 
-                    send.println(confirmDelete);
-                    send.flush();
+                        send.println(confirmDelete);
+                        send.flush();
+                        //sender 21
+                    }
 
                 } else if (sellerResponse.equals(sellerOptions[2])) { //create product
                     String storeName = receive.readLine(); //receiver 30
@@ -575,24 +687,28 @@ public class Server {
                     String description = receive.readLine();
                     String quantity = receive.readLine();
                     String price = receive.readLine();
-                    try {
-                        int realQuantity = Integer.parseInt(quantity);
-                        double realPrice = Double.parseDouble(price);
+                    if (storeName == null || productName == null || description == null || quantity == null || price == null) {
 
-                        boolean listed = sell.createProduct(storeName, productName, description, realQuantity, realPrice);
-                        if (storeName.equals("") || productName.equals("") || quantity.equals("") || price.equals("")) {
-                            listed = false;
-                        }
-                        if (listed) {
-                            send.println("y");
-                            send.flush();
-                        } else {
+                    } else {
+                        try {
+                            int realQuantity = Integer.parseInt(quantity);
+                            double realPrice = Double.parseDouble(price);
+
+                            boolean listed = sell.createProduct(storeName, productName, description, realQuantity, realPrice);
+                            if (storeName.equals("") || productName.equals("") || quantity.equals("") || price.equals("")) {
+                                listed = false;
+                            }
+                            if (listed) {
+                                send.println("y");
+                                send.flush();
+                            } else {
+                                send.println("n");
+                                send.flush();
+                            }
+                        } catch (Exception e) {
                             send.println("n");
                             send.flush();
                         }
-                    } catch (Exception e) {
-                        send.println("n");
-                        send.flush();
                     }
 
 
@@ -604,103 +720,124 @@ public class Server {
                     String newDescription = receive.readLine();
                     String quantity = receive.readLine();
                     String price = receive.readLine();
-                    try {
-                        int newQuantity = Integer.parseInt(quantity);
-                        double newPrice = Double.parseDouble(price);
+                    if (storeName == null || productName == null || newDescription == null
+                            || quantity == null || price == null || newStore == null || newName == null) {
 
-                        boolean confirmEdit = sell.editProduct(storeName, productName, newStore, newName, newDescription, newQuantity, newPrice);
-                        if (storeName.equals("") || productName.equals("") || newStore.equals("") || newName.equals("") ||
-                                newDescription.equals("") || quantity.equals("") || price.equals("")) {
-                            confirmEdit = false;
-                        }
-                        if (confirmEdit) {
-                            send.println("y");    //sender32
-                            send.flush();
-                        } else {
+                    } else {
+                        try {
+                            int newQuantity = Integer.parseInt(quantity);
+                            double newPrice = Double.parseDouble(price);
+
+                            boolean confirmEdit = sell.editProduct(storeName, productName, newStore, newName, newDescription, newQuantity, newPrice);
+                            if (storeName.equals("") || productName.equals("") || newStore.equals("") || newName.equals("") ||
+                                    newDescription.equals("") || quantity.equals("") || price.equals("")) {
+                                confirmEdit = false;
+                            }
+                            if (confirmEdit) {
+                                send.println("y");    //sender32
+                                send.flush();
+                            } else {
+                                send.println("n");
+                                send.flush();
+                            }
+                        } catch (Exception e) {
                             send.println("n");
                             send.flush();
                         }
-                    } catch (Exception e) {
-                        send.println("n");
-                        send.flush();
                     }
 
                 } else if (sellerResponse.equals(sellerOptions[4])) { //delete product
                     String storeName = receive.readLine();
                     String productName = receive.readLine();
                     // receiver 32
+                    if (storeName == null || productName == null) {
 
-                    try {
-                        boolean delete = sell.deleteProduct(storeName, productName);        //sender 33
-                        if (delete) {
-                            String confirmDelete = "y";
-                            send.println(confirmDelete);
-                            send.flush();
-                        } else {
+                    } else {
+
+                        try {
+                            boolean delete = sell.deleteProduct(storeName, productName);        //sender 33
+                            if (delete) {
+                                String confirmDelete = "y";
+                                send.println(confirmDelete);
+                                send.flush();
+                            } else {
+                                String confirmDelete = "n";
+                                send.println(confirmDelete);
+                                send.flush();
+                            }
+
+                        } catch (Exception e) {
                             String confirmDelete = "n";
                             send.println(confirmDelete);
                             send.flush();
                         }
-
-                    } catch (Exception e) {
-                        String confirmDelete = "n";
-                        send.println(confirmDelete);
-                        send.flush();
                     }
 
                 } else if (sellerResponse.equals(sellerOptions[5])) { //import product file
                     String pathName = receive.readLine();
-                    try {
-                        boolean check = sell.importFile(pathName);
-                        if (check) {
-                            String confirm = "y";
-                            send.println(confirm);
-                            send.flush();
-                        } else if (!check) {
+                    if (pathName == null) {
+
+                    } else {
+                        try {
+                            boolean check = sell.importFile(pathName);
+                            if (check) {
+                                String confirm = "y";
+                                send.println(confirm);
+                                send.flush();
+                            } else if (!check) {
+                                String confirm = "n";
+                                send.println(confirm);
+                                send.flush();
+                            }
+                        } catch (Exception e) {
                             String confirm = "n";
-                            send.println(confirm);
-                            send.flush();
                         }
-                    } catch (Exception e) {
-                        String confirm = "n";
                     }
 
 
                 } else if (sellerResponse.equals(sellerOptions[6])) { //export
                     String pathName = receive.readLine(); //receiver pathName
-                    try {
-                        boolean check = sell.exportFile(pathName);
-                        if (check) {
-                            String confirm = "y";
-                            send.println(confirm);
-                            send.flush();
-                        } else if (!check) {
+                    if (pathName == null) {
+
+                    } else {
+                        try {
+                            boolean check = sell.exportFile(pathName);
+                            if (check) {
+                                String confirm = "y";
+                                send.println(confirm);
+                                send.flush();
+                            } else if (!check) {
+                                String confirm = "n";
+                                send.println(confirm);
+                                send.flush();
+                            }
+                        } catch (Exception e) {
                             String confirm = "n";
                             send.println(confirm);
                             send.flush();
                         }
-                    } catch (Exception e) {
-                        String confirm = "n";
-                        send.println(confirm);
-                        send.flush();
                     }
 
                 } else if (sellerResponse.equals(sellerOptions[7])) { //log out
                     whileSelling = true;
                 } else if (sellerResponse.equalsIgnoreCase(sellerOptions[8])) { //store stats
                     String storeName = receive.readLine();
-                    try {
-                        ArrayList<String> log;
-                        log = sell.sellerLog(storeName);
-                        try {
-                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                            objectOutput.writeObject(log);
-                        } catch (Exception e) {
-                            String hitwo = "";
-                        }
+                    if (storeName == null) {
 
-                    } catch (Exception e) {
-                        String hi = "";
+                    } else {
+                        try {
+                            ArrayList<String> log;
+                            log = sell.sellerLog(storeName);
+                            try {
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                objectOutput.writeObject(log);
+                            } catch (Exception e) {
+                                String hitwo = "";
+                            }
+
+                        } catch (Exception e) {
+                            String hi = "";
+                        }
                     }
                 } else if (sellerResponse.equalsIgnoreCase(sellerOptions[9])) { //cart information
                     ArrayList<String> cartStats = sell.getSellerCart();//insertmethod
