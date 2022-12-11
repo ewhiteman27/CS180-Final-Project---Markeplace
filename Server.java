@@ -167,11 +167,14 @@ public class Server {
                     ArrayList<String> sort = new ArrayList<>();
                     if (type.equalsIgnoreCase(sortType[0])) { //price
                         sort = buy.sortPrice();
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(sort);
                     } else if (type.equalsIgnoreCase(sortType[1])) { //quantity
                         sort = buy.sortQuantity();
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(sort);
                     }
-                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                    objectOutput.writeObject(sort);
+
 
 
 
@@ -183,6 +186,10 @@ public class Server {
                     editProfile[2] = "Change Email";
 
                     String editChoice = receive.readLine(); //receiver 06
+                    if (editChoice.equalsIgnoreCase("n")) {
+                        String doNothing = "HAHA";
+
+                    }
 
                     if (editChoice.equals(editProfile[0])) { //username change
 
@@ -194,19 +201,23 @@ public class Server {
 
                         String newUsernameStored = receive.readLine();
                         //receiver 09
+                        if (emailStored == null || passwordStored == null || newUsernameStored == null) {
 
-                        boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
-                        String confirmChange;
-
-                        if (changeUsername) {
-                            confirmChange = "true";
                         } else {
-                            confirmChange = "false";
-                        }
 
-                        send.println(confirmChange);
-                        send.flush();
-                        //sender 13
+                            boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
+                            String confirmChange;
+
+                            if (changeUsername) {
+                                confirmChange = "true";
+                            } else {
+                                confirmChange = "false";
+                            }
+
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 13
+                        }
 
                     } else if (editChoice.equals(editProfile[1])) {  //password change
                         String emailStored = receive.readLine();
@@ -217,24 +228,28 @@ public class Server {
 
                         String newPasswordStored = receive.readLine();
                         //receiver 12
-                        try {
-                            boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
-                            String confirmChange;
+                        if (emailStored == null || usernameStored == null || newPasswordStored == null) {
 
-                            if (changePassword) {
-                                confirmChange = "true";
-                            } else {
-                                confirmChange = "false";
+                        } else {
+                            try {
+                                boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                                String confirmChange;
+
+                                if (changePassword) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
+                                }
+
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
+                            } catch (Exception e) {
+                                String confirmChange = "false";
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
                             }
-
-                            send.println(confirmChange);
-                            send.flush();
-                            //sender 14
-                        } catch (Exception e) {
-                            String confirmChange = "false";
-                            send.println(confirmChange);
-                            send.flush();
-                            //sender 14
                         }
 
                     } else if (editChoice.equals(editProfile[2])) {  //emailchange
