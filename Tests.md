@@ -2,11 +2,11 @@
 
 Steps:
 
-     User launches application.
-     User selects the username textbox.
-     User enters username via the keyboard.
-     User selects the password textbox.
-    User selects the "Log in" button. 
+1. User launches application.
+2. User selects the username textbox.
+3. User enters username via the keyboard.
+4. User selects the password textbox.
+5. User selects the "Log in" button. 
 
 Expected result: Application verifies the user's username and password and loads their homepage automatically. 
 
