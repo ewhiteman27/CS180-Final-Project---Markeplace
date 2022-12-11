@@ -122,6 +122,7 @@ public class Client {
 
                     }
                 }
+            }
                 // END OF LOGIN
 
 
@@ -519,19 +520,26 @@ public class Client {
                                     String confirm = receive.readLine(); //confirm details
                                     if (!confirm.equalsIgnoreCase("Product not found")) {
                                         String finalConfirm = confirm.replaceAll(";", "\n");
+                                        String check = receive.readLine();
+                                        if (check.equalsIgnoreCase("y")) {
 
-                                        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
-                                        Object object = oi.readObject();
-                                        ArrayList<String> temp = (ArrayList<String>) object;
-                                        ArrayList<String> searchReviews = new ArrayList<>();
-                                        searchReviews.addAll(temp);
-                                        String[] completeList = new String[searchReviews.size()];
-                                        searchReviews.toArray(completeList);
-                                        if (searchReviews.isEmpty()) {
+
+                                            ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                                            Object object = oi.readObject();
+                                            ArrayList<String> temp = (ArrayList<String>) object;
+                                            ArrayList<String> searchReviews = new ArrayList<>();
+                                            searchReviews.addAll(temp);
+                                            String[] completeList = new String[searchReviews.size()];
+                                            searchReviews.toArray(completeList);
+                                            if (searchReviews.isEmpty()) {
+                                                JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                            } else {
+                                                String trash = (String) JOptionPane.showInputDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+                                            }
+                                        } else {
                                             JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
-                                        } else {
-                                            String trash = (String) JOptionPane.showInputDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
                                         }
                                     } else {
                                         JOptionPane.showMessageDialog(null, "Product not found!", "Market", JOptionPane.INFORMATION_MESSAGE);
@@ -965,7 +973,7 @@ public class Client {
 
                     } while (whileSelling == false);
                 }
-            }
+
 
 
         } catch (Exception e) {
