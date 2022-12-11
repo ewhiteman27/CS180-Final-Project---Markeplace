@@ -130,7 +130,7 @@ public class Server {
 
         if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
             NewBuyer buy = new NewBuyer(edits.getUsername()); //gives access to buyer methods
-            String[] buyerOptions = new String[9];
+            String[] buyerOptions = new String[10];
             buyerOptions[0] = "View All Available Products"; //done
             buyerOptions[1] = "Sort The Marketplace"; //framed
             buyerOptions[2] = "Edit Account"; //done
@@ -140,6 +140,7 @@ public class Server {
             buyerOptions[6] = "Log Out"; //done
             buyerOptions[7] = "View a Product's Details"; //done
             buyerOptions[8] = "Search"; //done
+            buyerOptions[9] = "Leave a Review";
             boolean whileBuying = false;
 
             do {
@@ -449,16 +450,23 @@ public class Server {
                     }
                 } else if (buyerFirstResponse.equals((buyerOptions[6]))) { //logout
                     whileBuying = true;
-                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details  //IT is giving me each individual index instead of the combined string
+                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details
                     String storeName = receive.readLine();
                     String productName = receive.readLine();
                     if (storeName == null || productName == null) {
 
                     } else {
                         String withDescription = buy.getFormattedProduct(productName, storeName);
+                        ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
+                        if (reviews.isEmpty()) {
 
-                        send.println(withDescription);
-                        send.flush();
+                        } else {
+                            send.println(withDescription);
+                            send.flush();
+                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                            objectOutput.writeObject(reviews);
+                        }
+
                     }
                 } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
                     String searchTerm = receive.readLine();
@@ -468,6 +476,28 @@ public class Server {
                         ArrayList<String> results = buy.searchProduct(searchTerm);
                         ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                         objectOutput.writeObject(results);
+                    }
+
+                } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[9])) { //reviews
+                    String storeName = receive.readLine();
+                    String productName = receive.readLine();
+                    String review = receive.readLine();
+                    if (storeName == null || productName == null || review == null) {
+
+                    } else {
+                        try {
+                            buy.reviewProducts(storeName, productName, review);
+                            String confirm = "y";
+                            send.println(confirm);
+                            send.flush();
+                        } catch (Exception e) {
+                            String c = "n";
+                            send.println(c);
+                            send.flush();
+
+                        }
+
+
                     }
 
                 }
