@@ -388,17 +388,20 @@ public class Client {
 
                                 if (cartResponse.equalsIgnoreCase(cartOptions[0])) { //add item
                                     String storeName = (String) JOptionPane.showInputDialog(null, "Enter the name of the store that carries the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                    send.println(storeName);   //sender add to cart
+                                    send.flush();
                                     if (storeName != null) {
                                         String productName = (String) JOptionPane.showInputDialog(null, "Enter the name of the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                        send.println(productName);
+                                        send.flush();
                                         if (productName != null) {
                                             String quantity = (String) JOptionPane.showInputDialog(null, "Enter the number of items you want to add:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                            send.println(quantity);
+                                            send.flush();
                                             if (quantity != null) {
-                                                send.println(storeName);   //sender add to cart
-                                                send.flush();
-                                                send.println(productName);
-                                                send.flush();
-                                                send.println(quantity);
-                                                send.flush();
+
+
+
 
                                                 String confirmAdd = receive.readLine();
                                                 if (confirmAdd.equalsIgnoreCase("y")) {
@@ -477,43 +480,53 @@ public class Client {
                             String filePath = JOptionPane.showInputDialog(null, "Enter the file path:", "Market", JOptionPane.INFORMATION_MESSAGE);
                             send.println(filePath); //sender filepath
                             send.flush();
+                            if (filePath == null) {
 
-                            String confirmExport = receive.readLine();
-                            if (confirmExport.equalsIgnoreCase("y")) {
-                                JOptionPane.showMessageDialog(null, "File Was Exported!", "Market", JOptionPane.INFORMATION_MESSAGE);
-                            } else if (confirmExport.equalsIgnoreCase("n")) {
-                                JOptionPane.showMessageDialog(null, "File Failed to Export!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
 
+                                String confirmExport = receive.readLine();
+                                if (confirmExport.equalsIgnoreCase("y")) {
+                                    JOptionPane.showMessageDialog(null, "File Was Exported!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                } else if (confirmExport.equalsIgnoreCase("n")) {
+                                    JOptionPane.showMessageDialog(null, "File Failed to Export!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                }
                             }
 
-                        } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
+                        } else if (buyerFirstResponse.equals((buyerOptions[6]))) { //log out
                             JOptionPane.showMessageDialog(null, "Thank you for using the Market!", "Market", JOptionPane.INFORMATION_MESSAGE);
                             whileBuying = true;
-                        } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) {
+                        } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //get details
                             String storeName = (String) JOptionPane.showInputDialog(null, "Enter the name of the store that carries the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
-                            String productName = (String) JOptionPane.showInputDialog(null, "Enter the name of the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
                             send.println(storeName);   //sender details
                             send.flush();
-                            send.println(productName);
-                            send.flush();
+                            if (storeName != null) {
+                                String productName = (String) JOptionPane.showInputDialog(null, "Enter the name of the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                send.println(productName);
+                                send.flush();
+                                if (productName != null) {
+                                    String confirm = receive.readLine(); //confirm details
+                                    String finalConfirm = confirm.replaceAll(";", "\n");
 
-                            String confirm = receive.readLine(); //confirm details
-                            String finalConfirm = confirm.replaceAll(";", "\n");
-
-                            JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
-
+                                    JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
+                                }
+                            }
                         } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
                             String searchTerm = (String) JOptionPane.showInputDialog(null, "Search:", "Market", JOptionPane.INFORMATION_MESSAGE);
                             send.println(searchTerm);
                             send.flush();
-                            ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
-                            Object object = oi.readObject();
-                            ArrayList<String> temp = (ArrayList<String>) object;
-                            ArrayList<String> searchProducts = new ArrayList<>();
-                            searchProducts.addAll(temp);
-                            String[] completeList = new String[searchProducts.size()];
-                            searchProducts.toArray(completeList);
-                            String searchResponse = (String) JOptionPane.showInputDialog(null, "Here are the results:", "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+                            if (searchTerm == null) {
+
+                            } else {
+                                ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                                Object object = oi.readObject();
+                                ArrayList<String> temp = (ArrayList<String>) object;
+                                ArrayList<String> searchProducts = new ArrayList<>();
+                                searchProducts.addAll(temp);
+                                String[] completeList = new String[searchProducts.size()];
+                                searchProducts.toArray(completeList);
+                                String searchResponse = (String) JOptionPane.showInputDialog(null, "Here are the results:", "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+                            }
 
 
                         }
