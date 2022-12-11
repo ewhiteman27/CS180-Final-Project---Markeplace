@@ -228,6 +228,7 @@ public class Server {
 
                         String newPasswordStored = receive.readLine();
                         //receiver 12
+
                         if (emailStored == null || usernameStored == null || newPasswordStored == null) {
 
                         } else {
@@ -261,23 +262,27 @@ public class Server {
 
                         String newEmailStored = receive.readLine();
                         //receiver 17
-                        String confirmChange;
-                        try {
-                            boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+                        if (usernameStored == null || passwordStored == null || newEmailStored == null) {
 
-                            if (changeEmail) {
-                                confirmChange = "true";
-                            } else {
+                        } else {
+                            String confirmChange;
+                            try {
+                                boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+
+                                if (changeEmail) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
+                                }
+
+                            } catch (Exception e) {
                                 confirmChange = "false";
                             }
 
-                        } catch (Exception e) {
-                            confirmChange = "false";
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 18
                         }
-
-                        send.println(confirmChange);
-                        send.flush();
-                        //sender 18
 
                     }
 
@@ -287,116 +292,137 @@ public class Server {
 
                     String passwordStored = receive.readLine();
                     //receiver 20
+                    if (usernameStored == null || passwordStored == null) {
 
-                    String confirmDelete;
-                    try {
-                        boolean delete = edits.deleteAccount(usernameStored, passwordStored);
-                        if (delete) {
-                            confirmDelete = "true";
-                            whileBuying = true;
-                        } else {
+                    } else {
+
+                        String confirmDelete;
+                        try {
+                            boolean delete = edits.deleteAccount(usernameStored, passwordStored);
+                            if (delete) {
+                                confirmDelete = "true";
+                                whileBuying = true;
+                            } else {
+                                confirmDelete = "false";
+                            }
+                        } catch (Exception e) {
                             confirmDelete = "false";
                         }
-                    } catch (Exception e) {
-                        confirmDelete = "false";
+
+                        send.println(confirmDelete);
+                        send.flush();
+                        //sender 21
                     }
 
-                    send.println(confirmDelete);
-                    send.flush();
-                    //sender 21
-
                 } else if (buyerFirstResponse.equals((buyerOptions[4]))) { //view cart plus
-                    String[] cartOptions = new String[4];
+                    String[] cartOptions = new String[5];
                     cartOptions[0] = "Add Item to Cart";
                     cartOptions[1] = "Remove Item From Cart";
                     cartOptions[2] = "Go Back to Main Menu";
                     cartOptions[3] = "View Items in Cart";
+                    cartOptions[4] = "Purchase";
 
 
                     String cartChoice = receive.readLine();
-                    if (cartChoice.equalsIgnoreCase("purchase")) {
-                        boolean purchased = true;
-                        int loop = buy.numInCart();
-                        for (int i = 0; i < loop; i++) {
-                            purchased = buy.buy();
-                            if (!purchased) {
-                                send.println("n");
-                                send.flush();
-                                break;
+                    if (cartChoice == null) {
+
+                    } else {
+                        if (cartChoice.equalsIgnoreCase("purchase")) {
+                            boolean purchased = true;
+                            int loop = buy.numInCart();
+                            for (int i = 0; i < loop; i++) {
+                                purchased = buy.buy();
+                                if (!purchased) {
+                                    send.println("n");
+                                    send.flush();
+                                    break;
+                                }
                             }
-                        }
-                        if (purchased) {
-                            send.println("y");
-                            send.flush();
-                        }
-
-                    }
-
-                    if (cartChoice.equalsIgnoreCase(cartOptions[0])) { //add to cart
-                        String storeName = receive.readLine();
-                        String productName = receive.readLine();
-                        String quantity = receive.readLine();
-                        try {
-                            int formatQuantity = Integer.parseInt(quantity);
-                            boolean bought = buy.addToCart(storeName, productName, formatQuantity);
-                            if (bought) {
-                                String confirmAdd = "y";
-                                send.println(confirmAdd);
-                                send.flush();
-                            } else {
-                                String confirmAdd = "n";
-                                send.println(confirmAdd);
+                            if (purchased) {
+                                send.println("y");
                                 send.flush();
                             }
 
-
-                        } catch (Exception e) {
-                            String confirmAdd = "n";
-                            send.println(confirmAdd);
-                            send.flush(); //sender confirm add
                         }
 
-                    } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
-                        ArrayList<String> cart = buy.getBuyerCart();
-                        try {
-                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                            objectOutput.writeObject(cart);
-                        } catch (Exception e) {
-                            String n = "n";
-                        }
-                        String goStop = receive.readLine();
-                        if (goStop.equalsIgnoreCase("go")) {
+                        if (cartChoice.equalsIgnoreCase(cartOptions[0])) { //add to cart
                             String storeName = receive.readLine();
                             String productName = receive.readLine();
-                            String confirmRemove;
+                            String quantity = receive.readLine();
+                            if (storeName == null || quantity == null || productName == null) {
+
+                            } else {
+                                try {
+                                    int formatQuantity = Integer.parseInt(quantity);
+                                    boolean bought = buy.addToCart(storeName, productName, formatQuantity);
+                                    if (bought) {
+                                        String confirmAdd = "y";
+                                        send.println(confirmAdd);
+                                        send.flush();
+                                    } else {
+                                        String confirmAdd = "n";
+                                        send.println(confirmAdd);
+                                        send.flush();
+                                    }
 
 
-                            try {
-                                boolean remove = buy.removeFromCart(storeName, productName);
-                                if (remove) {
-                                    confirmRemove = "y";
-                                } else {
-                                    confirmRemove = "n";
+                                } catch (Exception e) {
+                                    String confirmAdd = "n";
+                                    send.println(confirmAdd);
+                                    send.flush(); //sender confirm add
                                 }
-                                send.println(confirmRemove);
-                                send.flush();
-                            } catch (Exception e) {
-                                confirmRemove = "n";
-                                send.println(confirmRemove);
-                                send.flush();
                             }
-                        }
+
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
+                            ArrayList<String> cart = buy.getBuyerCart();
+                            try {
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                objectOutput.writeObject(cart);
+                            } catch (Exception e) {
+                                String n = "n";
+                            }
+                            String goStop = receive.readLine();
+                            if (goStop == null) {
+
+                            } else {
+                                if (goStop.equalsIgnoreCase("go")) {
+                                    String storeName = receive.readLine();
+                                    String productName = receive.readLine();
+                                    if (storeName == null || productName == null) {
+
+                                    } else {
+                                        String confirmRemove;
 
 
-                    } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
-                        String haha = "Smile and Wave";
-                    } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
-                        ArrayList<String> cart = buy.getBuyerCart();
-                        try {
-                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                            objectOutput.writeObject(cart);
-                        } catch (Exception e) {
-                            String n = "n";
+                                        try {
+                                            boolean remove = buy.removeFromCart(storeName, productName);
+                                            if (remove) {
+                                                confirmRemove = "y";
+                                            } else {
+                                                confirmRemove = "n";
+                                            }
+                                            send.println(confirmRemove);
+                                            send.flush();
+                                        } catch (Exception e) {
+                                            confirmRemove = "n";
+                                            send.println(confirmRemove);
+                                            send.flush();
+                                        }
+                                    }
+                                }
+                            }
+
+
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
+                            String haha = "Smile and Wave";
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
+                            ArrayList<String> cart = buy.getBuyerCart();
+                            try {
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                objectOutput.writeObject(cart);
+                            } catch (Exception e) {
+                                String n = "n";
+                            }
                         }
                     }
 
