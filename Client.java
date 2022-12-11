@@ -125,6 +125,16 @@ public class Client {
                 // END OF LOGIN
 
 
+
+
+
+
+
+
+
+
+
+
                 int theUserAccountType = Integer.parseInt(receive.readLine());
                 send.println(theUserAccountType);
                 send.flush();
@@ -536,6 +546,21 @@ public class Client {
                 }  //END OF BUYER
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 //START OF SELLER
                 if (theUserAccountType == 2) {
                     String[] sellerOptions = new String[10];
@@ -552,7 +577,14 @@ public class Client {
                     boolean whileSelling = false;
                     do {
                         JOptionPane.showMessageDialog(null, "Welcome Seller!", "Market", JOptionPane.INFORMATION_MESSAGE);
-                        sellerFirstResponse = (String) JOptionPane.showInputDialog(null, "What would you like to do?", "Market", JOptionPane.INFORMATION_MESSAGE, null, sellerOptions, sellerOptions[0]);
+                       do {
+                            sellerFirstResponse = (String) JOptionPane.showInputDialog(null, "What would you like to do?", "Market", JOptionPane.INFORMATION_MESSAGE, null, sellerOptions, sellerOptions[0]);
+                            if (sellerFirstResponse == null) {
+                                JOptionPane.showMessageDialog(null, "Please select one of the options on the dropdown menu", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            }
+
+                        } while (sellerFirstResponse == null);
+
 
                         send.println(sellerFirstResponse);
                         send.flush();
@@ -565,100 +597,120 @@ public class Client {
                             editProfile[2] = "Change Email";
                             String editChoice = (String) JOptionPane.showInputDialog(null, "What would you like to change?", "Market", JOptionPane.INFORMATION_MESSAGE, null, editProfile, editProfile[0]);
 
-                            send.println(editChoice);
-                            send.flush();
                             //Sender 06
-
-                            if (editChoice.equals(editProfile[0])) { //Username change
-                                String emailStored = (String) JOptionPane.showInputDialog(null, "To change your username we must verify your email and password!\n Enter Email:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(emailStored);
+                            if (editChoice == null) {
+                                String no = "n";
+                                send.println(no);
                                 send.flush();
-                                //sender 07
 
-                                String passwordStored = (String) JOptionPane.showInputDialog(null, "To change your username we must verify your email and password!\n Enter Password:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(passwordStored);
+                            } else {
+                                send.println(editChoice);
                                 send.flush();
-                                //sender 08
 
-                                String newUsernameStored = (String) JOptionPane.showInputDialog(null, "Enter your desired Username:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                if (editChoice.equals(editProfile[0])) { //Username change
+                                    String emailStored = (String) JOptionPane.showInputDialog(null, "To change your username we must verify your email and password!\n Enter Email:", "Market", JOptionPane.INFORMATION_MESSAGE);
 
-                                send.println(newUsernameStored);
-                                send.flush();
-                                //sender 09
+                                    send.println(emailStored);
+                                    send.flush();
+                                    //sender 07
+                                    if (emailStored != null) {
+                                        String passwordStored = (String) JOptionPane.showInputDialog(null, "To change your username we must verify your email and password!\n Enter Password:", "Market", JOptionPane.INFORMATION_MESSAGE);
 
-                                String confirmChange = receive.readLine();
-                                //receiver 13
-                                if (confirmChange.equalsIgnoreCase("false")) {
-                                    JOptionPane.showMessageDialog(null, "Username was not changed! Either email/password was incorrect " +
-                                            "or the username you selected was already taken.", "Market", JOptionPane.INFORMATION_MESSAGE);
-                                } else {
-                                    JOptionPane.showMessageDialog(null, "Username change successfully!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                        send.println(passwordStored);
+                                        send.flush();
+                                        //sender 08
+                                        if (passwordStored != null) {
+                                            String newUsernameStored = (String) JOptionPane.showInputDialog(null, "Enter your desired Username:", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                            send.println(newUsernameStored);
+                                            send.flush();
+                                            //sender 09
+                                            if (newUsernameStored != null) {
+                                                String confirmChange = receive.readLine();
+                                                //receiver 13
+                                                if (confirmChange.equalsIgnoreCase("false")) {
+                                                    JOptionPane.showMessageDialog(null, "Username was not changed! Either email/password was incorrect " +
+                                                            "or the username you selected was already taken.", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                                } else {
+                                                    JOptionPane.showMessageDialog(null, "Username change successfully!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                                }
+
+
+                                            }
+
+                                        }
+                                    }
+
+                                } else if (editChoice.equals(editProfile[1])) { //Password change
+                                    String emailStored = (String) JOptionPane.showInputDialog(null, "To change your password we must verify your email and username!\n Enter Email:", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                    send.println(emailStored);
+                                    send.flush();
+                                    //sender 10
+                                    if (emailStored != null) {
+                                        String usernameStored = (String) JOptionPane.showInputDialog(null, "To change your password we must verify your email and username!\n Enter Username:", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                        send.println(usernameStored);
+                                        send.flush();
+                                        //sender 11
+                                        if (usernameStored != null) {
+                                            String newPasswordStored = (String) JOptionPane.showInputDialog(null, "Enter your new Password:", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                            send.println(newPasswordStored);
+                                            send.flush();
+                                            //sender 12
+                                            if (newPasswordStored != null) {
+                                                String confirmChange = receive.readLine(); //checks if credentials and new password are valid
+                                                //receiver 14
+
+                                                if (confirmChange.equalsIgnoreCase("true")) {
+                                                    JOptionPane.showMessageDialog(null, "Password change successfully!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                                } else if (confirmChange.equalsIgnoreCase("false")) {
+                                                    JOptionPane.showMessageDialog(null, "Password was not changed! Either password length was not longer than 8 characters " +
+                                                            "or the username/email was incorrect!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                                }
+                                            }
+                                        }
+                                    }
+
+
+                                } else { //change Email
+                                    String usernameStored = (String) JOptionPane.showInputDialog(null, "To change your Email we must verify your username and password!\n Enter Username:", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                    send.println(usernameStored);
+                                    send.flush();
+                                    //sender 15
+                                    if (usernameStored != null) {
+
+                                        String passwordStored = (String) JOptionPane.showInputDialog(null, "To change your Email we must verify your username and password!\n Enter Password:", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                        send.println(passwordStored);
+                                        send.flush();
+                                        //sender 16
+                                        if (passwordStored != null) {
+                                            String newEmailStored = (String) JOptionPane.showInputDialog(null, "Enter your new Email:", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                            send.println(newEmailStored);
+                                            send.flush();
+                                            //sender 17
+                                            if (newEmailStored != null) {
+                                                String confirmChange = receive.readLine(); //checks if credentials and new Email are valid
+                                                //receiver 18
+
+                                                if (confirmChange.equalsIgnoreCase("true")) {
+                                                    JOptionPane.showMessageDialog(null, "Email change successfully!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                                } else if (confirmChange.equalsIgnoreCase("false")) {
+                                                    JOptionPane.showMessageDialog(null, "Email was not changed! Either Email is already in use " +
+                                                            "or the username/password was incorrect!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                                }
+                                            }
+                                        }
+                                    }
+
                                 }
-
-                            } else if (editChoice.equals(editProfile[1])) { //Password change
-                                String emailStored = (String) JOptionPane.showInputDialog(null, "To change your password we must verify your email and username!\n Enter Email:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(emailStored);
-                                send.flush();
-                                //sender 10
-
-                                String usernameStored = (String) JOptionPane.showInputDialog(null, "To change your password we must verify your email and username!\n Enter Username:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(usernameStored);
-                                send.flush();
-                                //sender 11
-
-                                String newPasswordStored = (String) JOptionPane.showInputDialog(null, "Enter your new Password:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(newPasswordStored);
-                                send.flush();
-                                //sender 12
-
-                                String confirmChange = receive.readLine(); //checks if credentials and new password are valid
-                                //receiver 14
-
-                                if (confirmChange.equalsIgnoreCase("true")) {
-                                    JOptionPane.showMessageDialog(null, "Password change successfully!", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                } else if (confirmChange.equalsIgnoreCase("false")) {
-                                    JOptionPane.showMessageDialog(null, "Password was not changed! Either password length was not longer than 8 characters " +
-                                            "or the username/email was incorrect!", "Market", JOptionPane.INFORMATION_MESSAGE);
-                                }
-
-                            } else { //change Email
-                                String usernameStored = (String) JOptionPane.showInputDialog(null, "To change your Email we must verify your username and password!\n Enter Username:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(usernameStored);
-                                send.flush();
-                                //sender 15
-
-                                String passwordStored = (String) JOptionPane.showInputDialog(null, "To change your Email we must verify your username and password!\n Enter Password:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(passwordStored);
-                                send.flush();
-                                //sender 16
-
-                                String newEmailStored = (String) JOptionPane.showInputDialog(null, "Enter your new Email:", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                send.println(newEmailStored);
-                                send.flush();
-                                //sender 17
-
-                                String confirmChange = receive.readLine(); //checks if credentials and new Email are valid
-                                //receiver 18
-
-                                if (confirmChange.equalsIgnoreCase("true")) {
-                                    JOptionPane.showMessageDialog(null, "Email change successfully!", "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                } else if (confirmChange.equalsIgnoreCase("false")) {
-                                    JOptionPane.showMessageDialog(null, "Email was not changed! Either Email is already in use " +
-                                            "or the username/password was incorrect!", "Market", JOptionPane.INFORMATION_MESSAGE);
-                                }
-
                             }
-
                         } else if (sellerFirstResponse.equals(sellerOptions[1])) {
                             String usernameStored = (String) JOptionPane.showInputDialog(null, "To delete your account we must verify your username and password!\n Enter username:", "Market", JOptionPane.INFORMATION_MESSAGE);
                             send.println(usernameStored);
