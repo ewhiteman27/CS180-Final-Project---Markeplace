@@ -4,7 +4,7 @@ Compile and run this project by running the Server class, then the Client class,
 
 Report submitted by Amit Manchella, Repository submitted by Ethan Whiteman
 
-Classes:
+# Classes:
 
 Server - Main author: Saujin Park - Connects to Client class, receives information, processes inputs, and calls methods from the NewBuyer, NewSeller, NewProduct, and User classes before sending data back to the Client class.
 
