@@ -713,7 +713,7 @@ public class Server {
 //                } else if (sellerResponse.equalsIgnoreCase(sellerOptions[9])) { //cart information
 //
 //                }
-//            } while (whileSelling == false);
+//            } while (whileSelling == false); //final do while loop
 //
 //
 //        }
