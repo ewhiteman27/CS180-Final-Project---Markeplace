@@ -191,7 +191,7 @@ public class NewBuyer extends NewProduct {
         f.createNewFile();
         FileReader fr = new FileReader(f);
         BufferedReader bfr = new BufferedReader(fr);
-        FileWriter fw = new FileWriter(f , false);
+        FileWriter fw = new FileWriter(f , true);
         PrintWriter pw = new PrintWriter(fw);
         ArrayList<String> products = getProducts();
         for (int i = 0; i < products.size(); i++) {
