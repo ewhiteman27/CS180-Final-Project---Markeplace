@@ -158,16 +158,17 @@ public class ServerConcurrent extends Thread {
                     String buyerFirstResponse = receive.readLine();
                     if (buyerFirstResponse.equals(buyerOptions[0])) { //view all products
                         synchronized (LOCK) {
-                            int sizeOfProductsArray = buy.formatProducts(product.getProducts()).size();
-                            String[] fillingList = new String[sizeOfProductsArray];
-                            for (int i = 0; i < sizeOfProductsArray; i++) {
-                                fillingList[i] = buy.formatProducts(product.getProducts()).get(i);
-                            }
-                            try {
+                            int sizeOfProductsArray = product.getProducts().size();
+                            System.out.println(sizeOfProductsArray);
+                            if (sizeOfProductsArray != 0) {
+                                String Continue = "y";
                                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                                objectOutput.writeObject(fillingList);
-                            } catch (Exception e) {
-                                String n = "n";
+                                objectOutput.writeObject(Continue);
+                                objectOutput.writeObject(buy.formatProducts(product.getProducts()));
+                            } else {
+                                String Continue = "n";
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                objectOutput.writeObject(Continue);
                             }
 
 
