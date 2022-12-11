@@ -428,35 +428,47 @@ public class Server {
 
                 } else if (buyerFirstResponse.equals((buyerOptions[5]))) { //export purchase history
                     String filePath = receive.readLine(); //receiver filepath
-                    try {
-                        boolean export = buy.exportFile(filePath);
-                        String confirm;
-                        if (export) {
-                            confirm = "y";
-                        } else {
-                            confirm = "n";
+                    if (filePath == null) {
+
+                    } else {
+                        try {
+                            boolean export = buy.exportFile(filePath);
+                            String confirm;
+                            if (export) {
+                                confirm = "y";
+                            } else {
+                                confirm = "n";
+                            }
+                            send.println(confirm);
+                            send.flush();
+                        } catch (Exception e) {
+                            String confirm = "n";
+                            send.println(confirm);
+                            send.flush();
                         }
-                        send.println(confirm);
-                        send.flush();
-                    } catch (Exception e) {
-                        String confirm = "n";
-                        send.println(confirm);
-                        send.flush();
                     }
-                } else if (buyerFirstResponse.equals((buyerOptions[6]))) {
+                } else if (buyerFirstResponse.equals((buyerOptions[6]))) { //logout
                     whileBuying = true;
                 } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details  //IT is giving me each individual index instead of the combined string
                     String storeName = receive.readLine();
                     String productName = receive.readLine();
-                    String withDescription = buy.getFormattedProduct(productName, storeName);
+                    if (storeName == null || productName == null) {
 
-                    send.println(withDescription);
-                    send.flush();
+                    } else {
+                        String withDescription = buy.getFormattedProduct(productName, storeName);
+
+                        send.println(withDescription);
+                        send.flush();
+                    }
                 } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
                     String searchTerm = receive.readLine();
-                    ArrayList<String> results = buy.searchProduct(searchTerm);
-                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                    objectOutput.writeObject(results);
+                    if (searchTerm == null) {
+
+                    } else {
+                        ArrayList<String> results = buy.searchProduct(searchTerm);
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(results);
+                    }
 
                 }
 
