@@ -1,4 +1,4 @@
-# Test 1: User log in (Example only, delete later)
+# Test 1: User log in (Example from handout, delete later)
 
 Steps:
 
