@@ -141,7 +141,7 @@ public class Client {
                 //sender04
                 String buyerFirstResponse = "";
                 String sellerFirstResponse = "";
-                String[] buyerOptions = new String[9];
+                String[] buyerOptions = new String[10];
                 buyerOptions[0] = "View All Available Products"; //done
                 buyerOptions[1] = "Sort The Marketplace"; //framed
                 buyerOptions[2] = "Edit Account"; //done
@@ -151,6 +151,7 @@ public class Client {
                 buyerOptions[6] = "Log Out"; //done
                 buyerOptions[7] = "View a Product's Details"; //done
                 buyerOptions[8] = "Search"; //done
+                buyerOptions[9] = "Leave a Review"; //wip
                 if (theUserAccountType == 1) {  //buyer
                     boolean whileBuying = false;
                     do {
@@ -516,9 +517,24 @@ public class Client {
                                 send.flush();
                                 if (productName != null) {
                                     String confirm = receive.readLine(); //confirm details
-                                    String finalConfirm = confirm.replaceAll(";", "\n");
+                                    if (!confirm.equalsIgnoreCase("Product not found")) {
+                                        String finalConfirm = confirm.replaceAll(";", "\n");
 
-                                    JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
+                                        ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                                        Object object = oi.readObject();
+                                        ArrayList<String> temp = (ArrayList<String>) object;
+                                        ArrayList<String> searchReviews = new ArrayList<>(temp);
+                                        String[] completeList = new String[searchReviews.size()];
+                                        searchReviews.toArray(completeList);
+
+
+                                        String trash = (String) JOptionPane.showInputDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+                                    } else {
+                                        JOptionPane.showMessageDialog(null, "Product not found!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                    }
+                                } else {
+
                                 }
                             }
                         } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
@@ -539,6 +555,30 @@ public class Client {
                             }
 
 
+                        } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[9])) {
+                            String storeName = (String) JOptionPane.showInputDialog(null, "Enter the name of the store that carries the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            send.println(storeName);   //sender add to cart
+                            send.flush();
+                            if (storeName != null) {
+                                String productName = (String) JOptionPane.showInputDialog(null, "Enter the name of the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                send.println(productName);
+                                send.flush();
+                                if (productName != null) {
+                                    String review = (String) JOptionPane.showInputDialog(null, "Enter your review:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                    send.println(review);
+                                    send.flush();
+                                    if (review != null) {
+                                        String confirm = receive.readLine();
+                                        if (confirm.equalsIgnoreCase("n")) {
+                                            JOptionPane.showMessageDialog(null, "The name of the store or the name of the product was incorrect!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                        } else {
+                                            JOptionPane.showMessageDialog(null, "Thank you for leaving a review!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                                        }
+                                    }
+                                }
+                            }
                         }
                     } while (whileBuying == false);
 
