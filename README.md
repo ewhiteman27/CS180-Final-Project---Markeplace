@@ -6,11 +6,11 @@ Report submitted by Amit Manchella, Repository submitted by Ethan Whiteman
 
 # Classes:
 
-Server - Main author: Saujin Park - Connects to Client class, receives information, processes inputs, and calls methods from the NewBuyer, NewSeller, NewProduct, and User classes before sending data back to the Client class.
+Server - Main author: Saujin Park & Assisted By: Amit Manchella - Connects to Client class, receives information, processes inputs, and calls methods from the NewBuyer, NewSeller, NewProduct, and User classes before sending data back to the Client class.
 
-Client - Main author: Saujin Park - Connects to Server class, receives inputs from users, sends information to Server, and displays options and information in GUIs for users to select from.
+Client - Main author: Saujin Park & Assisted By: Amit Manchella  - Connects to Server class, receives inputs from users, sends information to Server, and displays options and information in GUIs for users to select from.
 
-NewBuyer - Main author: Ethan Whiteman - Used by the Server class, contains all methods for Buyer type accounts such as adding and removing items in a cart, purchasing items, viewing available products, and leaving and viewing reviews on products.
+NewBuyer - Main author: Ethan Whiteman & Assisted By: Amit Manchella - Used by the Server class, contains all methods for Buyer type accounts such as adding and removing items in a cart, purchasing items, viewing available products, and leaving and viewing reviews on products.
 
 NewSeller - Main author: Ethan Whiteman - Used by the Server class, contains all methods for Seller type accounts such as creating, editing, and deleting products, viewing items that have been purchased or are in a customer's cart, and importing or exporting files containing product information.
 
