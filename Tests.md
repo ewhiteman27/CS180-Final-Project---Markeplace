@@ -10,7 +10,7 @@ Steps:
 
 Expected result: Application says the 'the account was created successfully!". 
 
-Test Status: Passed.
+Test Status: 
 
 # Test 2: Create Product for Seller
 
@@ -30,7 +30,7 @@ Steps:
 
 Expected result: Application reads 'Product was created!'. 
 
-Test Status: Passed. 
+Test Status: 
 
 
 # Test 3: Edit Product for Seller
@@ -53,7 +53,7 @@ Steps:
 
 Expected result: Application reads "Product was editted".
 
-Test Satatus: Passed. 
+Test Satatus: 
 
 # Test 4: Delete Product for Seller
 
@@ -70,7 +70,7 @@ Steps:
 
 Expected result: Application reads "Product was successfully removed!"
 
-Test Status: Passed.
+Test Status: 
 
 # Test 5: Edit Account For Buyer/Seller (Change Username)
 
@@ -89,10 +89,9 @@ Steps:
 
 Expected Result: Application reads "Username change successfully!".
 
-Test Status: Passed. 
+Test Status:  
 
 # Test 6: Edit Account For Buyer/Seller (Change Password)
-
 
 Steps: 
 1. Enter Purdue Marketplace.
@@ -109,6 +108,25 @@ Steps:
 
 Expected Result: Application reads "Password change successfully!".
 
-Test Status: Passed. 
+Test Status: 
 
-# Test 7: Delete Account for Buyer/Seller (
+# Test 7: Edit Account For Buyer/Seller (Change Email)
+
+Steps: 
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Confirms the user is logged in with message "Log in Successful!".
+6. Confirms the user is either a seller or buyer and says "Welcome Seller!" or "Welcome Buyer!"
+7. Chose 'Edit Account'. 
+8. Chose 'Change Email'.
+9. Enter username credential.
+10. Enter password credential. 
+11. Enter new email.
+
+Expected Result: Application reads "Email change successfully!".
+
+Test Status:  
+
+# Test 8: Delete Account for Buyer/Seller (
