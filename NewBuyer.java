@@ -82,6 +82,9 @@ public class NewBuyer extends NewProduct {
                             && productInCart[1].equalsIgnoreCase(currentProduct[1])
                             && productInCart[2].equalsIgnoreCase(currentProduct[2])) {
                         int quantityRemove = Integer.parseInt(currentProduct[4]) - Integer.parseInt(productInCart[4]);
+                        if (quantityRemove < 0) {
+                            return false;
+                        }
                         currentProduct[4] = String.valueOf(quantityRemove);
                         products.set(j, String.format("%s,%s,%s,%s,%s,%s", currentProduct[0], currentProduct[1],
                                 currentProduct[2], currentProduct[3], currentProduct[4], currentProduct[5]));
@@ -244,10 +247,10 @@ public class NewBuyer extends NewProduct {
         }
         return buyerCart;
     }
-     public void reviewProducts(String storeName, String productName, String writtenReview) throws IOException {
-         /**
-          * Adds a review to a product and updates the Reviews.txt file
-          */
+    public void reviewProducts(String storeName, String productName, String writtenReview) throws IOException {
+        /**
+         * Adds a review to a product and updates the Reviews.txt file
+         */
 
         File f = new File("Reviews.txt");
         ArrayList<String> totalReviews = new ArrayList<String>();
@@ -268,7 +271,7 @@ public class NewBuyer extends NewProduct {
         pw.close();
         fw.close();
     }
-    
+
     public ArrayList<String> reviewForSpecificProduct(String storeName, String productName) throws IOException {
         /**
          * Returns an ArrayList of all reviews for the given product
@@ -281,8 +284,8 @@ public class NewBuyer extends NewProduct {
         BufferedReader bfr = new BufferedReader(fr);
         String line = bfr.readLine();
         while (line != null) {
-            String[] splitTheReviews = line.split(","); 
-            if (splitTheReviews.length == 4 && splitTheReviews[0].equalsIgnoreCase(storeName) && 
+            String[] splitTheReviews = line.split(",");
+            if (splitTheReviews.length == 4 && splitTheReviews[0].equalsIgnoreCase(storeName) &&
                     splitTheReviews[1].equalsIgnoreCase(productName)) {
                 String formattedReview = String.format("%s - %s", username, splitTheReviews[3]);
                 reviews.add(formattedReview);
