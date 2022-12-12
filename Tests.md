@@ -173,3 +173,66 @@ Expected Result: Application reads 'Item remved from cart!'.
 
 Test Status: 
 
+# Test 10: Leave a Review and View Product Details
+
+Steps: 
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Confirms the user is logged in with message "Log in Successful!".
+6. Confirms the user is either a buyer and says "Welcome Buyer!"
+7. Select 'Leave a Review'.
+8. Enter the store name of the product. 
+9. Enter the product name.
+10. Enter the review. 
+
+Expected Result: Application reads 'Thank you for leaving a review!'. 
+
+Test Status:
+
+11. Select 'View a Product's Details'. 
+12. Enter the store name of the product. 
+13. Enter the product name.
+
+Expected Result: Application that reads the product name, store name, seller username, product description, quantity avaliable, and the price with the respective values. Finally at the end, the review will pop up in a drop down of all the reviews with the buyer username and their comment.
+
+Test Status: 
+
+# Test 11: Logout 
+
+Steps: 
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Select 'Log Out'. 
+
+Expected Result: Application reads 'Thank you for using Market!'. 
+
+Test Status: 
+
+# Test 12: View All Avaliable Products and Sort The Marketplace
+
+Steps: 
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Select 'View All Avaliable Products'.
+
+Expected Result: Application reads the product name, store name, and the price with respective values. 
+
+Test Status:
+
+6. Select the 'Sort The Marketplace'.
+7. Select 'Price'. 
+
+Expected Result: Application reads the previous expected result but in the order of least to greatest price. 
+
+Test Status:
+
+8. Select the 'Sort The Marketplace'.
+9. Select 'Quantity'.
+
+Expected Result: Application reads the previous expected result but in the order of least to greatest quantity. 
