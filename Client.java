@@ -520,8 +520,7 @@ public class Client {
                                     String confirm = receive.readLine(); //confirm details
                                     if (!confirm.equalsIgnoreCase("Product not found")) {
                                         String finalConfirm = confirm.replaceAll(";", "\n");
-                                        String check = receive.readLine();
-                                        if (check.equalsIgnoreCase("y")) {
+                                        if (!finalConfirm.equalsIgnoreCase("Product not found")) {
 
 
                                             ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());

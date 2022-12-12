@@ -159,7 +159,6 @@ public class ServerConcurrent extends Thread {
                     if (buyerFirstResponse.equals(buyerOptions[0])) { //view all products
                         synchronized (LOCK) {
                             int sizeOfProductsArray = product.getProducts().size();
-                            System.out.println(sizeOfProductsArray);
                             if (sizeOfProductsArray != 0) {
                                 String Continue = "y";
                                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
@@ -170,7 +169,6 @@ public class ServerConcurrent extends Thread {
                                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                                 objectOutput.writeObject(Continue);
                             }
-
 
                         }
                     } else if (buyerFirstResponse.equals((buyerOptions[1]))) { //sort
@@ -482,20 +480,25 @@ public class ServerConcurrent extends Thread {
                         whileBuying = true;
                     } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details
                         String storeName = receive.readLine();
-                        String productName = receive.readLine();
-                        if (storeName == null || productName == null) {
+                        if (storeName != null) {
+                            String productName = receive.readLine();
+                            if (storeName == null || productName == null) {
 
-                        } else {
-                            synchronized (LOCK) {
-                                String withDescription = buy.getFormattedProduct(productName, storeName);
-                                ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
-                                if (reviews.isEmpty()) {
-
-                                } else {
-                                    send.println(withDescription);
-                                    send.flush();
-                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
-                                    objectOutput.writeObject(reviews);
+                            } else {
+                                synchronized (LOCK) {
+                                    String withDescription = buy.getFormattedProduct(productName, storeName);
+                                    ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
+                                    if (reviews.isEmpty()) {
+                                        send.println(withDescription);
+                                        send.flush();
+                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                                        objectOutput.writeObject(new ArrayList<String>());
+                                    } else {
+                                        send.println(withDescription);
+                                        send.flush();
+                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                                        objectOutput.writeObject(reviews);
+                                    }
                                 }
                             }
                         }
