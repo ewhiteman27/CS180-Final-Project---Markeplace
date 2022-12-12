@@ -181,7 +181,7 @@ Steps:
 3. Enter username credential.
 4. Enter password credential. 
 5. Confirms the user is logged in with message "Log in Successful!".
-6. Confirms the user is either a buyer and says "Welcome Buyer!"
+6. Confirms the user is a buyer and says "Welcome Buyer!"
 7. Select 'Leave a Review'.
 8. Enter the store name of the product. 
 9. Enter the product name.
@@ -206,7 +206,9 @@ Steps:
 2. Chose 'Log in Into Existing Account' option.
 3. Enter username credential.
 4. Enter password credential. 
-5. Select 'Log Out'. 
+5. Confirms the user is logged in with message "Log in Successful!".
+6. Confirms the user is either a buyer or seller and says "Welcome Buyer!" or "Welcome Seller!". 
+7. Select 'Log Out'. 
 
 Expected Result: Application reads 'Thank you for using Market!'. 
 
@@ -290,3 +292,18 @@ Expected Result: Application reads 'File Was Exported!".
 
 Test Status: 
 
+# Test 14: View Store Statistics (Seller)
+
+Steps:
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Confirms the user is logged in with message "Log in Successful!".
+6. Confirms the user is a seller and says "Welcome Seller!"
+7. Select 'View Store Statistics'. 
+8. Enter store name. 
+
+Expected Result: Application displays all the products avaliable in the store with their descriptions. 
+
+Test Status: 
