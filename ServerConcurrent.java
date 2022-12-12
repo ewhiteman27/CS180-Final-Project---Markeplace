@@ -148,11 +148,14 @@ public class ServerConcurrent extends Thread {
                                 String Continue = "y";
                                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                                 objectOutput.writeObject(Continue);
+                                objectOutput.flush();
                                 objectOutput.writeObject(buy.formatProducts(product.getProducts()));
+                                objectOutput.flush();
                             } else {
                                 String Continue = "n";
                                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                                 objectOutput.writeObject(Continue);
+                                objectOutput.flush();
                             }
 
                         }
@@ -450,13 +453,15 @@ public class ServerConcurrent extends Thread {
                             if (reviews.isEmpty()) {
                                 send.println(withDescription);
                                 send.flush();
-                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
-                                objectOutput.writeObject(new ArrayList<String>());
+//                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+//                                objectOutput.writeObject(new ArrayList<String>());
+//                                objectOutput.flush();
                             } else {
                                 send.println(withDescription);
                                 send.flush();
-                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
-                                objectOutput.writeObject(reviews);
+//                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+//                                objectOutput.writeObject(reviews);
+//                                objectOutput.flush();
                             }
                         }
 

@@ -440,21 +440,22 @@ public class Client {
                             send.flush();
                             String confirm = receive.readLine(); //confirm details
                             String finalConfirm = confirm.replaceAll(";", "\n"); //formatted desc
+//                            ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+//                            Object object = oi.readObject();
+//                            ArrayList<String> temp = (ArrayList<String>) object;
+//                            ArrayList<String> searchReviews = new ArrayList<>();
+//                            searchReviews.add("Reviews");
+//                            searchReviews.addAll(temp);
                             if (!finalConfirm.equalsIgnoreCase("Product not found")) {
-                                ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
-                                Object object = oi.readObject();
-                                ArrayList<String> temp = (ArrayList<String>) object;
-                                ArrayList<String> searchReviews = new ArrayList<>();
-                                searchReviews.add("Reviews");
-                                searchReviews.addAll(temp);
-                                if (searchReviews.size() == 1) {
+
+//                                if (searchReviews.size() == 1) {
                                     JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
-                                } else {
-                                    String[] completeList = new String[searchReviews.size()];
-                                    searchReviews.toArray(completeList);
-                                    String trash = (String) JOptionPane.showInputDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
-                                }
+//                                } else {
+//                                    String[] completeList = new String[searchReviews.size()];
+//                                    searchReviews.toArray(completeList);
+//                                    String trash = (String) JOptionPane.showInputDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
+//                                }
                             } else {
                                 JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
