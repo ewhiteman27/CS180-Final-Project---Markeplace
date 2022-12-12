@@ -236,3 +236,7 @@ Test Status:
 9. Select 'Quantity'.
 
 Expected Result: Application reads the previous expected result but in the order of least to greatest quantity. 
+
+Test Status:
+
+
