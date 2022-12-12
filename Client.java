@@ -126,7 +126,7 @@ public class Client {
                 //sender04
                 String buyerFirstResponse = "";
                 String sellerFirstResponse = "";
-                String[] buyerOptions = new String[10];
+                String[] buyerOptions = new String[11];
                 buyerOptions[0] = "View All Available Products"; //done
                 buyerOptions[1] = "Sort The Marketplace"; //framed
                 buyerOptions[2] = "Edit Account"; //done
@@ -136,7 +136,8 @@ public class Client {
                 buyerOptions[6] = "Log Out"; //done
                 buyerOptions[7] = "View a Product's Details"; //done
                 buyerOptions[8] = "Search"; //done
-                buyerOptions[9] = "Leave a Review"; //wip
+                buyerOptions[9] = "Leave a Review";
+                buyerOptions[10] = "View reviews of a product";
                 if (theUserAccountType == 1) {  //buyer
                     boolean whileBuying = false;
                     do {
@@ -449,7 +450,7 @@ public class Client {
                             if (!finalConfirm.equalsIgnoreCase("Product not found")) {
 
 //                                if (searchReviews.size() == 1) {
-                                    JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
 //                                } else {
 //                                    String[] completeList = new String[searchReviews.size()];
@@ -503,6 +504,26 @@ public class Client {
                             }
 
 
+                        } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[10])) {
+                            String storeName = (String) JOptionPane.showInputDialog(null, "Enter the name of the store that carries the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            send.println(storeName);   //sender add to cart
+                            send.flush();
+                            String productName = (String) JOptionPane.showInputDialog(null, "Enter the name of the product:", "Market", JOptionPane.INFORMATION_MESSAGE);
+                            send.println(productName);
+                            send.flush();
+                            ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                            Object object = oi.readObject();
+                            ArrayList<String> reviews = new ArrayList<>();
+                            reviews = (ArrayList<String>) object;
+                            if (reviews.isEmpty()) {
+                                JOptionPane.showMessageDialog(null, "No reviews have been created for this product!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                            } else {
+                                String[] processedReviews = new String[reviews.size()];
+                                reviews.toArray(processedReviews);
+                                String trash = (String) JOptionPane.showInputDialog(null, "Reviews:", "Market", JOptionPane.INFORMATION_MESSAGE, null, processedReviews, processedReviews[0]);
+                            }
+                            
                         }
                     } while (!whileBuying);
 
