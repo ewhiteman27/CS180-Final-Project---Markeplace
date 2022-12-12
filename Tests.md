@@ -246,7 +246,7 @@ Expected Result: Application displays a drop down option that includes the produ
 
 Test Status: 
 
-# Test 13: Purchasing Products and Inventory Changing Accordingly
+# Test 13: Purchasing Products, Inventory Changing, and Exporting Purchase History
 
 1. Enter Purdue Marketplace.
 2. Chose 'Log in Into Existing Account' option.
@@ -280,6 +280,13 @@ Test Status:
 15. Enter store and product name.
 
 Expected Result: Quanitity avaliable for the product is the orginal quantity - the quantity purchased. 
+
+Test Status: 
+
+16. Select 'Export Purchase History'. 
+17. Enter a filepath that the user can acess. 
+
+Expected Result: Application reads 'File Was Exported!". 
 
 Test Status: 
 
