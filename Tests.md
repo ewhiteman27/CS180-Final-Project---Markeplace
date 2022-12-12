@@ -9,6 +9,7 @@ Steps:
 6. Chose Buyer for buyer account and Seller for seller account. 
 
 Expected result: Application says the 'the account was created successfully!". 
+
 Test Status: Passed.
 
 # Test 2: Create Product for Seller
@@ -28,6 +29,7 @@ Steps:
 12. Enter product price.
 
 Expected result: Application reads 'Product was created!'. 
+
 Test Status: Passed. 
 
 
@@ -50,6 +52,7 @@ Steps:
 14. Enter new product price.
 
 Expected result: Application reads "Product was editted".
+
 Test Satatus: Passed. 
 
 # Test 4: Delete Product for Seller
@@ -66,6 +69,7 @@ Steps:
 9. Enter Product name that needs to be removed. 
 
 Expected result: Application reads "Product was successfully removed!"
+
 Test Status: Passed.
 
 # Test 5: Edit Account For Buyer/Seller (Change Username)
@@ -84,6 +88,7 @@ Steps:
 11. Enter new username.
 
 Expected Result: Application reads "Username change successfully!".
+
 Test Status: Passed. 
 
 # Test 6: Edit Account For Buyer/Seller (Change Password)
@@ -103,6 +108,7 @@ Steps:
 11. Enter new password.
 
 Expected Result: Application reads "Password change successfully!".
+
 Test Status: Passed. 
 
 # Test 7: Delete Account for Buyer/Seller (
