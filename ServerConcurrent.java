@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class ServerConcurrent extends Thread {
     Socket socket;
     private static final Object LOCK = new Object();
+    private static final Object USERLOCK = new Object();
 
     public ServerConcurrent(Socket s) {
         this.socket = s;
@@ -34,89 +35,86 @@ public class ServerConcurrent extends Thread {
             boolean logInMenu = false;
             do {
                 String choice = receive.readLine(); //reads if user creates an account or logs in
-                if (choice != null) {
-                    User user = new User();
-                    boolean hasTheAccountBeenCreated;
-                    if (choice.equals(createLogIn[0])) {
-                        //Verifying that creating an account is successful
-                        do {
+                User user = new User();
+                boolean hasTheAccountBeenCreated;
+                if (choice.equals(createLogIn[0])) {
+                    //Verifying that creating an account is successful
+                    do {
 
-                            String username = receive.readLine();
-
-                            String password = receive.readLine();
-                            String email = receive.readLine();
-                            String buyerSeller = receive.readLine();
-                            if (buyerSeller.equalsIgnoreCase("buyer")) {
-                                try {
-                                    synchronized (LOCK) {
-                                        user = user.createAccount(username, email, password, 1);
-                                        String yVariable = "y";
-                                        send.println(yVariable); // Reader on 54
-                                        send.flush();
-                                        hasTheAccountBeenCreated = true;
-                                    }
-                                } catch (Exception e) {
-                                    String xVariable = "x";
-                                    send.println(xVariable); // Reader on 54
-                                    send.flush();
-
-                                }
-                            } else if (buyerSeller.equalsIgnoreCase("seller")) {
-                                try {
-                                    synchronized (LOCK) {
-                                        user = user.createAccount(username, email, password, 2);
-                                        String yVariable = "y";
-                                        send.println(yVariable); // Reader on 54
-                                        send.flush();
-                                    }
-                                } catch (Exception e) {
-                                    String xVariable = "x";
-                                    send.println(xVariable);
-                                    send.flush();
-                                }
-                            }
-                            hasTheAccountBeenCreated = true;
-
-
-                            //Receiver 01
-
-
-                        } while (hasTheAccountBeenCreated == false);
-
-                        //end of account creation
-
-
-                    } else if (choice.equals(createLogIn[1])) { //LOGGING IN
-                        boolean hasLoggedIn = false;
-                        do {
-
-                            String username = receive.readLine();
-                            String password = receive.readLine();
+                        String username = receive.readLine();
+                        String password = receive.readLine();
+                        String email = receive.readLine();
+                        String buyerSeller = receive.readLine();
+                        if (buyerSeller.equalsIgnoreCase("buyer")) {
                             try {
-                                synchronized (LOCK) {
-                                    user = user.logIn(username, password);
-                                    edits = user;
-                                    String yOrn = "y";
-                                    send.println(yOrn);
+                                synchronized (USERLOCK) {
+                                    user = user.createAccount(username, email, password, 1);
+                                    String yVariable = "y";
+                                    send.println(yVariable); // Reader on 54
                                     send.flush();
-                                    send.println(user.getAccountType());
-                                    send.flush();
-                                    logInMenu = true;
+                                    hasTheAccountBeenCreated = true;
                                 }
+                            } catch (Exception e) {
+                                String xVariable = "x";
+                                send.println(xVariable); // Reader on 54
+                                send.flush();
 
-                            } catch (Exception e) { //exception is caught when user fails to log in
-
-                                String yOrn = "n";
-                                send.println(yOrn);
+                            }
+                        } else if (buyerSeller.equalsIgnoreCase("seller")) {
+                            try {
+                                synchronized (USERLOCK) {
+                                    user = user.createAccount(username, email, password, 2);
+                                    String yVariable = "y";
+                                    send.println(yVariable); // Reader on 54
+                                    send.flush();
+                                }
+                            } catch (Exception e) {
+                                String xVariable = "x";
+                                send.println(xVariable);
                                 send.flush();
                             }
+                        }
+                        hasTheAccountBeenCreated = true;
 
 
-                            hasLoggedIn = true;
+                        //Receiver 01
 
-                        } while (hasLoggedIn == false);
 
-                    }
+                    } while (hasTheAccountBeenCreated == false);
+
+                    //end of account creation
+
+
+                } else if (choice.equals(createLogIn[1])) { //LOGGING IN
+                    boolean hasLoggedIn = false;
+                    do {
+
+                        String username = receive.readLine();
+                        String password = receive.readLine();
+                        try {
+                            synchronized (USERLOCK) {
+                                user = user.logIn(username, password);
+                            }
+                            edits = user;
+                            String yOrn = "y";
+                            send.println(yOrn);
+                            send.flush();
+                            send.println(user.getAccountType());
+                            send.flush();
+                            logInMenu = true;
+
+                        } catch (Exception e) { //exception is caught when user fails to log in
+
+                            String yOrn = "n";
+                            send.println(yOrn);
+                            send.flush();
+                        }
+
+
+                        hasLoggedIn = true;
+
+                    } while (hasLoggedIn == false);
+
                 }
             } while (logInMenu == false);
             //end of login portion
@@ -124,7 +122,7 @@ public class ServerConcurrent extends Thread {
 
             String userAccountType = receive.readLine(); //checks to see if the user is a buyer or seller
             //receive 04
-
+            //???????????????????????????????????????????????????????????????????????????????????????????????
             if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
                 NewBuyer buy = new NewBuyer(edits.getUsername()); //gives access to buyer methods
                 String[] buyerOptions = new String[10];
@@ -139,6 +137,7 @@ public class ServerConcurrent extends Thread {
                 buyerOptions[8] = "Search"; //done
                 buyerOptions[9] = "Leave a Review";
                 boolean whileBuying = false;
+
 
                 do {
                     String buyerFirstResponse = receive.readLine();
