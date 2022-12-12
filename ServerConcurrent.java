@@ -9,8 +9,8 @@ import java.util.ArrayList;
  * A Server class
  * It handles everything that deals with processing the user's inputs and runs the methods.
  *
- * @authors saujinpark and
  * @version 1.0
+ * @authors saujinpark and
  */
 public class ServerConcurrent extends Thread {
     Socket socket;
@@ -42,45 +42,37 @@ public class ServerConcurrent extends Thread {
                         do {
 
                             String username = receive.readLine();
-                            if (username != null) {
 
-                                String password = receive.readLine();
-                                if (password != null) {
-                                    String email = receive.readLine();
-                                    if (email != null) {
-                                        String buyerSeller = receive.readLine();
-                                        if (buyerSeller != null) {
-                                            if (buyerSeller.equalsIgnoreCase("buyer")) {
-                                                try {
-                                                    synchronized (LOCK) {
-                                                        user = user.createAccount(username, email, password, 1);
-                                                        String yVariable = "y";
-                                                        send.println(yVariable); // Reader on 54
-                                                        send.flush();
-                                                        hasTheAccountBeenCreated = true;
-                                                    }
-                                                } catch (Exception e) {
-                                                    String xVariable = "x";
-                                                    send.println(xVariable); // Reader on 54
-                                                    send.flush();
-
-                                                }
-                                            } else if (buyerSeller.equalsIgnoreCase("seller")) {
-                                                try {
-                                                    synchronized (LOCK) {
-                                                        user = user.createAccount(username, email, password, 2);
-                                                        String yVariable = "y";
-                                                        send.println(yVariable); // Reader on 54
-                                                        send.flush();
-                                                    }
-                                                } catch (Exception e) {
-                                                    String xVariable = "x";
-                                                    send.println(xVariable);
-                                                    send.flush();
-                                                }
-                                            }
-                                        }
+                            String password = receive.readLine();
+                            String email = receive.readLine();
+                            String buyerSeller = receive.readLine();
+                            if (buyerSeller.equalsIgnoreCase("buyer")) {
+                                try {
+                                    synchronized (LOCK) {
+                                        user = user.createAccount(username, email, password, 1);
+                                        String yVariable = "y";
+                                        send.println(yVariable); // Reader on 54
+                                        send.flush();
+                                        hasTheAccountBeenCreated = true;
                                     }
+                                } catch (Exception e) {
+                                    String xVariable = "x";
+                                    send.println(xVariable); // Reader on 54
+                                    send.flush();
+
+                                }
+                            } else if (buyerSeller.equalsIgnoreCase("seller")) {
+                                try {
+                                    synchronized (LOCK) {
+                                        user = user.createAccount(username, email, password, 2);
+                                        String yVariable = "y";
+                                        send.println(yVariable); // Reader on 54
+                                        send.flush();
+                                    }
+                                } catch (Exception e) {
+                                    String xVariable = "x";
+                                    send.println(xVariable);
+                                    send.flush();
                                 }
                             }
                             hasTheAccountBeenCreated = true;
@@ -99,30 +91,26 @@ public class ServerConcurrent extends Thread {
                         do {
 
                             String username = receive.readLine();
-                            if (username != null) {
-                                String password = receive.readLine();
-                                if (password != null) {
-                                    try {
-                                        synchronized (LOCK) {
-                                            user = user.logIn(username, password);
-                                            edits = user;
-                                            String yOrn = "y";
-                                            send.println(yOrn);
-                                            send.flush();
-                                            send.println(user.getAccountType());
-                                            send.flush();
-                                            logInMenu = true;
-                                        }
-
-                                    } catch (Exception e) { //exception is caught when user fails to log in
-
-                                        String yOrn = "n";
-                                        send.println(yOrn);
-                                        send.flush();
-                                    }
-
+                            String password = receive.readLine();
+                            try {
+                                synchronized (LOCK) {
+                                    user = user.logIn(username, password);
+                                    edits = user;
+                                    String yOrn = "y";
+                                    send.println(yOrn);
+                                    send.flush();
+                                    send.println(user.getAccountType());
+                                    send.flush();
+                                    logInMenu = true;
                                 }
+
+                            } catch (Exception e) { //exception is caught when user fails to log in
+
+                                String yOrn = "n";
+                                send.println(yOrn);
+                                send.flush();
                             }
+
 
                             hasLoggedIn = true;
 
@@ -132,8 +120,6 @@ public class ServerConcurrent extends Thread {
                 }
             } while (logInMenu == false);
             //end of login portion
-
-
 
 
             String userAccountType = receive.readLine(); //checks to see if the user is a buyer or seller
@@ -192,9 +178,6 @@ public class ServerConcurrent extends Thread {
                         }
 
 
-
-
-
                     } else if (buyerFirstResponse.equals((buyerOptions[2]))) {
                         String[] editProfile = new String[3];
                         editProfile[0] = "Change Username";
@@ -217,24 +200,21 @@ public class ServerConcurrent extends Thread {
 
                             String newUsernameStored = receive.readLine();
                             //receiver 09
-                            if (emailStored == null || passwordStored == null || newUsernameStored == null) {
+                            synchronized (LOCK) {
+                                boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
+                                String confirmChange;
 
-                            } else {
-                                synchronized (LOCK) {
-                                    boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
-                                    String confirmChange;
-
-                                    if (changeUsername) {
-                                        confirmChange = "true";
-                                    } else {
-                                        confirmChange = "false";
-                                    }
-
-                                    send.println(confirmChange);
-                                    send.flush();
-                                    //sender 13
+                                if (changeUsername) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
                                 }
+
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 13
                             }
+
 
                         } else if (editChoice.equals(editProfile[1])) {  //password change
                             String emailStored = receive.readLine();
@@ -245,32 +225,28 @@ public class ServerConcurrent extends Thread {
 
                             String newPasswordStored = receive.readLine();
                             //receiver 12
+                            try {
+                                synchronized (LOCK) {
+                                    boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                                    String confirmChange;
 
-                            if (emailStored == null || usernameStored == null || newPasswordStored == null) {
-
-                            } else {
-                                try {
-                                    synchronized (LOCK) {
-                                        boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
-                                        String confirmChange;
-
-                                        if (changePassword) {
-                                            confirmChange = "true";
-                                        } else {
-                                            confirmChange = "false";
-                                        }
-
-                                        send.println(confirmChange);
-                                        send.flush();
-                                        //sender 14
+                                    if (changePassword) {
+                                        confirmChange = "true";
+                                    } else {
+                                        confirmChange = "false";
                                     }
-                                } catch (Exception e) {
-                                    String confirmChange = "false";
+
                                     send.println(confirmChange);
                                     send.flush();
                                     //sender 14
                                 }
+                            } catch (Exception e) {
+                                String confirmChange = "false";
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
                             }
+
 
                         } else if (editChoice.equals(editProfile[2])) {  //emailchange
                             String usernameStored = receive.readLine();
@@ -281,28 +257,26 @@ public class ServerConcurrent extends Thread {
 
                             String newEmailStored = receive.readLine();
                             //receiver 17
-                            if (usernameStored == null || passwordStored == null || newEmailStored == null) {
 
-                            } else {
-                                String confirmChange;
-                                try {
-                                    synchronized (LOCK) {
-                                        boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+                            String confirmChange;
+                            try {
+                                synchronized (LOCK) {
+                                    boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
 
-                                        if (changeEmail) {
-                                            confirmChange = "true";
-                                        } else {
-                                            confirmChange = "false";
-                                        }
+                                    if (changeEmail) {
+                                        confirmChange = "true";
+                                    } else {
+                                        confirmChange = "false";
                                     }
-                                } catch (Exception e) {
-                                    confirmChange = "false";
                                 }
-
-                                send.println(confirmChange);
-                                send.flush();
-                                //sender 18
+                            } catch (Exception e) {
+                                confirmChange = "false";
                             }
+
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 18
+
 
                         }
 
@@ -312,29 +286,27 @@ public class ServerConcurrent extends Thread {
 
                         String passwordStored = receive.readLine();
                         //receiver 20
-                        if (usernameStored == null || passwordStored == null) {
 
-                        } else {
 
-                            String confirmDelete;
-                            try {
-                                synchronized (LOCK) {
-                                    boolean delete = edits.deleteAccount(usernameStored, passwordStored);
-                                    if (delete) {
-                                        confirmDelete = "true";
-                                        whileBuying = true;
-                                    } else {
-                                        confirmDelete = "false";
-                                    }
+                        String confirmDelete;
+                        try {
+                            synchronized (LOCK) {
+                                boolean delete = edits.deleteAccount(usernameStored, passwordStored);
+                                if (delete) {
+                                    confirmDelete = "true";
+                                    whileBuying = true;
+                                } else {
+                                    confirmDelete = "false";
                                 }
-                            } catch (Exception e) {
-                                confirmDelete = "false";
                             }
-
-                            send.println(confirmDelete);
-                            send.flush();
-                            //sender 21
+                        } catch (Exception e) {
+                            confirmDelete = "false";
                         }
+
+                        send.println(confirmDelete);
+                        send.flush();
+                        //sender 21
+
 
                     } else if (buyerFirstResponse.equals((buyerOptions[4]))) { //view cart plus
                         String[] cartOptions = new String[5];
@@ -346,236 +318,195 @@ public class ServerConcurrent extends Thread {
 
 
                         String cartChoice = receive.readLine();
-                        if (cartChoice == null) {
 
-                        } else {
-                            if (cartChoice.equalsIgnoreCase("purchase")) {
-                                synchronized (LOCK) {
-                                    boolean purchased = true;
-                                    int loop = buy.numInCart();
-                                    for (int i = 0; i < loop; i++) {
-                                        purchased = buy.buy();
-                                        if (!purchased) {
-                                            send.println("n");
-                                            send.flush();
-                                            break;
-                                        }
-                                    }
-                                    if (purchased) {
-                                        send.println("y");
+                        if (cartChoice.equalsIgnoreCase("purchase")) {
+                            synchronized (LOCK) {
+                                boolean purchased = true;
+                                int loop = buy.numInCart();
+                                for (int i = 0; i < loop; i++) {
+                                    purchased = buy.buy();
+                                    if (!purchased) {
+                                        send.println("n");
                                         send.flush();
+                                        break;
                                     }
                                 }
-                            }
-
-                            if (cartChoice.equalsIgnoreCase(cartOptions[0])) { //add to cart
-                                String storeName = receive.readLine();
-                                String productName = receive.readLine();
-                                String quantity = receive.readLine();
-                                if (storeName == null || quantity == null || productName == null) {
-
-                                } else {
-                                    try {
-                                        synchronized (LOCK) {
-                                            int formatQuantity = Integer.parseInt(quantity);
-                                            boolean bought = buy.addToCart(storeName, productName, formatQuantity);
-                                            if (bought) {
-                                                String confirmAdd = "y";
-                                                send.println(confirmAdd);
-                                                send.flush();
-                                            } else {
-                                                String confirmAdd = "n";
-                                                send.println(confirmAdd);
-                                                send.flush();
-                                            }
-
-                                        }
-                                    } catch (Exception e) {
-                                        String confirmAdd = "n";
-                                        send.println(confirmAdd);
-                                        send.flush(); //sender confirm add
-                                    }
-                                }
-
-                            } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
-                                synchronized (LOCK) {
-                                    ArrayList<String> cart = buy.getBuyerCart();
-                                    try {
-                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                                        objectOutput.writeObject(cart);
-                                    } catch (Exception e) {
-                                        String n = "n";
-                                    }
-                                    String goStop = receive.readLine();
-                                    if (goStop == null) {
-
-                                    } else {
-                                        if (goStop.equalsIgnoreCase("go")) {
-                                            String storeName = receive.readLine();
-                                            String productName = receive.readLine();
-                                            if (storeName == null || productName == null) {
-
-                                            } else {
-                                                String confirmRemove;
-
-
-                                                try {
-                                                    boolean remove = buy.removeFromCart(storeName, productName);
-                                                    if (remove) {
-                                                        confirmRemove = "y";
-                                                    } else {
-                                                        confirmRemove = "n";
-                                                    }
-                                                    send.println(confirmRemove);
-                                                    send.flush();
-                                                } catch (Exception e) {
-                                                    confirmRemove = "n";
-                                                    send.println(confirmRemove);
-                                                    send.flush();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-
-                            } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
-                                String haha = "Smile and Wave";
-                            } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
-                                synchronized (LOCK) {
-                                    ArrayList<String> cart = buy.getBuyerCart();
-                                    try {
-                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                                        objectOutput.writeObject(cart);
-                                    } catch (Exception e) {
-                                        String n = "n";
-                                    }
+                                if (purchased) {
+                                    send.println("y");
+                                    send.flush();
                                 }
                             }
                         }
+
+                        if (cartChoice.equalsIgnoreCase(cartOptions[0])) { //add to cart
+                            String storeName = receive.readLine();
+                            String productName = receive.readLine();
+                            String quantity = receive.readLine();
+
+                            try {
+                                synchronized (LOCK) {
+                                    int formatQuantity = Integer.parseInt(quantity);
+                                    boolean bought = buy.addToCart(storeName, productName, formatQuantity);
+                                    if (bought) {
+                                        String confirmAdd = "y";
+                                        send.println(confirmAdd);
+                                        send.flush();
+                                    } else {
+                                        String confirmAdd = "n";
+                                        send.println(confirmAdd);
+                                        send.flush();
+                                    }
+
+                                }
+                            } catch (Exception e) {
+                                String confirmAdd = "n";
+                                send.println(confirmAdd);
+                                send.flush(); //sender confirm add
+                            }
+
+
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[1])) { //remove from cart
+                            synchronized (LOCK) {
+                                ArrayList<String> cart = buy.getBuyerCart();
+                                try {
+                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                    objectOutput.writeObject(cart);
+                                } catch (Exception e) {
+                                    String n = "n";
+                                }
+                                String goStop = receive.readLine();
+
+                                if (goStop.equalsIgnoreCase("go")) {
+                                    String storeName = receive.readLine();
+                                    String productName = receive.readLine();
+
+                                    String confirmRemove;
+
+
+                                    try {
+                                        boolean remove = buy.removeFromCart(storeName, productName);
+                                        if (remove) {
+                                            confirmRemove = "y";
+                                        } else {
+                                            confirmRemove = "n";
+                                        }
+                                        send.println(confirmRemove);
+                                        send.flush();
+                                    } catch (Exception e) {
+                                        confirmRemove = "n";
+                                        send.println(confirmRemove);
+                                        send.flush();
+                                    }
+
+                                }
+
+                            }
+
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[2])) { //main menu
+                            String haha = "Smile and Wave";
+                        } else if (cartChoice.equalsIgnoreCase(cartOptions[3])) { //view
+                            synchronized (LOCK) {
+                                ArrayList<String> cart = buy.getBuyerCart();
+                                try {
+                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                    objectOutput.writeObject(cart);
+                                } catch (Exception e) {
+                                    String n = "n";
+                                }
+                            }
+                        }
+
 
                     } else if (buyerFirstResponse.equals((buyerOptions[5]))) { //export purchase history
                         String filePath = receive.readLine(); //receiver filepath
-                        if (filePath == null) {
 
-                        } else {
-                            try {
-                                synchronized (LOCK) {
-                                    boolean export = buy.exportFile(filePath);
-                                    String confirm;
-                                    if (export) {
-                                        confirm = "y";
-                                    } else {
-                                        confirm = "n";
-                                    }
-                                    send.println(confirm);
-                                    send.flush();
+                        try {
+                            synchronized (LOCK) {
+                                boolean export = buy.exportFile(filePath);
+                                String confirm;
+                                if (export) {
+                                    confirm = "y";
+                                } else {
+                                    confirm = "n";
                                 }
-                            } catch (Exception e) {
-                                String confirm = "n";
                                 send.println(confirm);
                                 send.flush();
                             }
+                        } catch (Exception e) {
+                            String confirm = "n";
+                            send.println(confirm);
+                            send.flush();
                         }
+
                     } else if (buyerFirstResponse.equals((buyerOptions[6]))) { //logout
                         whileBuying = true;
                     } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details
                         String storeName = receive.readLine();
                         if (storeName != null) {
                             String productName = receive.readLine();
-                            if (storeName == null || productName == null) {
 
-                            } else {
-                                synchronized (LOCK) {
-                                    String withDescription = buy.getFormattedProduct(productName, storeName);
-                                    ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
-                                    if (reviews.isEmpty()) {
-                                        send.println(withDescription);
-                                        send.flush();
-                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
-                                        objectOutput.writeObject(new ArrayList<String>());
-                                    } else {
-                                        send.println(withDescription);
-                                        send.flush();
-                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
-                                        objectOutput.writeObject(reviews);
-                                    }
+                            synchronized (LOCK) {
+                                String withDescription = buy.getFormattedProduct(productName, storeName);
+                                ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
+                                if (reviews.isEmpty()) {
+                                    send.println(withDescription);
+                                    send.flush();
+                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                                    objectOutput.writeObject(new ArrayList<String>());
+                                } else {
+                                    send.println(withDescription);
+                                    send.flush();
+                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                                    objectOutput.writeObject(reviews);
                                 }
                             }
+
                         }
                     } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
                         String searchTerm = receive.readLine();
-                        if (searchTerm == null) {
 
-                        } else {
-                            synchronized (LOCK) {
-                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                                ArrayList<String> results = buy.searchProduct(searchTerm);
-                                String moveOn = "";
-                                if (results.isEmpty()) {
-                                    moveOn = "n";
-                                    objectOutput.writeObject(moveOn);
-                                } else {
-                                    moveOn = "y";
-                                    objectOutput.writeObject(moveOn);
-                                    objectOutput.writeObject(results);
-                                }
+                        synchronized (LOCK) {
+                            ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                            ArrayList<String> results = buy.searchProduct(searchTerm);
+                            String moveOn = "";
+                            if (results.isEmpty()) {
+                                moveOn = "n";
+                                objectOutput.writeObject(moveOn);
+                            } else {
+                                moveOn = "y";
+                                objectOutput.writeObject(moveOn);
+                                objectOutput.writeObject(results);
                             }
                         }
+
 
                     } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[9])) { //reviews
                         String storeName = receive.readLine();
                         String productName = receive.readLine();
                         String review = receive.readLine();
-                        if (storeName == null || productName == null || review == null) {
 
-                        } else {
-                            try {
-                                synchronized (LOCK) {
-                                    buy.reviewProducts(storeName, productName, review);
-                                    String confirm = "y";
-                                    send.println(confirm);
-                                    send.flush();
-                                }
-                            } catch (Exception e) {
-                                String c = "n";
-                                send.println(c);
+                        try {
+                            synchronized (LOCK) {
+                                buy.reviewProducts(storeName, productName, review);
+                                String confirm = "y";
+                                send.println(confirm);
                                 send.flush();
-
                             }
-
+                        } catch (Exception e) {
+                            String c = "n";
+                            send.println(c);
+                            send.flush();
 
                         }
+
 
                     }
 
                 } while (whileBuying == false);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            } else if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
+            }
+            if (userAccountType.equalsIgnoreCase("2")) { //If user is a seller
                 NewSeller sell = new NewSeller(edits.getUsername()); // gives access to seller methods
                 String[] sellerOptions = new String[10];
                 sellerOptions[0] = "Edit Account"; //done
@@ -615,24 +546,22 @@ public class ServerConcurrent extends Thread {
 
                             String newUsernameStored = receive.readLine();
                             //receiver 09
-                            if (emailStored == null || passwordStored == null || newUsernameStored == null) {
 
-                            } else {
-                                synchronized (LOCK) {
-                                    boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
-                                    String confirmChange;
+                            synchronized (LOCK) {
+                                boolean changeUsername = edits.changeUsername(newUsernameStored, passwordStored, emailStored);
+                                String confirmChange;
 
-                                    if (changeUsername) {
-                                        confirmChange = "true";
-                                    } else {
-                                        confirmChange = "false";
-                                    }
-
-                                    send.println(confirmChange);
-                                    send.flush();
-                                    //sender 13
+                                if (changeUsername) {
+                                    confirmChange = "true";
+                                } else {
+                                    confirmChange = "false";
                                 }
+
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 13
                             }
+
 
                         } else if (editChoice.equals(editProfile[1])) {  //password change
                             String emailStored = receive.readLine();
@@ -644,31 +573,29 @@ public class ServerConcurrent extends Thread {
                             String newPasswordStored = receive.readLine();
                             //receiver 12
 
-                            if (emailStored == null || usernameStored == null || newPasswordStored == null) {
 
-                            } else {
-                                try {
-                                    synchronized (LOCK) {
-                                        boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
-                                        String confirmChange;
+                            try {
+                                synchronized (LOCK) {
+                                    boolean changePassword = edits.changePassword(newPasswordStored, usernameStored, emailStored);
+                                    String confirmChange;
 
-                                        if (changePassword) {
-                                            confirmChange = "true";
-                                        } else {
-                                            confirmChange = "false";
-                                        }
-
-                                        send.println(confirmChange);
-                                        send.flush();
-                                        //sender 14
+                                    if (changePassword) {
+                                        confirmChange = "true";
+                                    } else {
+                                        confirmChange = "false";
                                     }
-                                } catch (Exception e) {
-                                    String confirmChange = "false";
+
                                     send.println(confirmChange);
                                     send.flush();
                                     //sender 14
                                 }
+                            } catch (Exception e) {
+                                String confirmChange = "false";
+                                send.println(confirmChange);
+                                send.flush();
+                                //sender 14
                             }
+
 
                         } else if (editChoice.equals(editProfile[2])) {  //emailchange
                             String usernameStored = receive.readLine();
@@ -679,28 +606,26 @@ public class ServerConcurrent extends Thread {
 
                             String newEmailStored = receive.readLine();
                             //receiver 17
-                            if (usernameStored == null || passwordStored == null || newEmailStored == null) {
 
-                            } else {
-                                String confirmChange;
-                                try {
-                                    synchronized (LOCK) {
-                                        boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
+                            String confirmChange;
+                            try {
+                                synchronized (LOCK) {
+                                    boolean changeEmail = edits.changeEmail(newEmailStored, usernameStored, passwordStored);
 
-                                        if (changeEmail) {
-                                            confirmChange = "true";
-                                        } else {
-                                            confirmChange = "false";
-                                        }
+                                    if (changeEmail) {
+                                        confirmChange = "true";
+                                    } else {
+                                        confirmChange = "false";
                                     }
-                                } catch (Exception e) {
-                                    confirmChange = "false";
                                 }
-
-                                send.println(confirmChange);
-                                send.flush();
-                                //sender 18
+                            } catch (Exception e) {
+                                confirmChange = "false";
                             }
+
+                            send.println(confirmChange);
+                            send.flush();
+                            //sender 18
+
 
                         }
                     } else if (sellerResponse.equals(sellerOptions[1])) { //delete account
@@ -709,29 +634,27 @@ public class ServerConcurrent extends Thread {
 
                         String passwordStored = receive.readLine();
                         //receiver 20
-                        if (usernameStored == null || passwordStored == null) {
 
-                        } else {
 
-                            String confirmDelete;
-                            try {
-                                synchronized (LOCK) {
-                                    boolean delete = edits.deleteAccount(usernameStored, passwordStored);
-                                    if (delete) {
-                                        confirmDelete = "true";
-                                        whileSelling = true;
-                                    } else {
-                                        confirmDelete = "false";
-                                    }
+                        String confirmDelete;
+                        try {
+                            synchronized (LOCK) {
+                                boolean delete = edits.deleteAccount(usernameStored, passwordStored);
+                                if (delete) {
+                                    confirmDelete = "true";
+                                    whileSelling = true;
+                                } else {
+                                    confirmDelete = "false";
                                 }
-                            } catch (Exception e) {
-                                confirmDelete = "false";
                             }
-
-                            send.println(confirmDelete);
-                            send.flush();
-                            //sender 21
+                        } catch (Exception e) {
+                            confirmDelete = "false";
                         }
+
+                        send.println(confirmDelete);
+                        send.flush();
+                        //sender 21
+
 
                     } else if (sellerResponse.equals(sellerOptions[2])) { //create product
                         String storeName = receive.readLine(); //receiver 30
@@ -739,30 +662,27 @@ public class ServerConcurrent extends Thread {
                         String description = receive.readLine();
                         String quantity = receive.readLine();
                         String price = receive.readLine();
-                        if (storeName == null || productName == null || description == null || quantity == null || price == null) {
 
-                        } else {
-                            try {
-                                synchronized (LOCK) {
-                                    int realQuantity = Integer.parseInt(quantity);
-                                    double realPrice = Double.parseDouble(price);
+                        try {
+                            synchronized (LOCK) {
+                                int realQuantity = Integer.parseInt(quantity);
+                                double realPrice = Double.parseDouble(price);
 
-                                    boolean listed = sell.createProduct(storeName, productName, description, realQuantity, realPrice);
-                                    if (storeName.equals("") || productName.equals("") || quantity.equals("") || price.equals("")) {
-                                        listed = false;
-                                    }
-                                    if (listed) {
-                                        send.println("y");
-                                        send.flush();
-                                    } else {
-                                        send.println("n");
-                                        send.flush();
-                                    }
+                                boolean listed = sell.createProduct(storeName, productName, description, realQuantity, realPrice);
+                                if (storeName.equals("") || productName.equals("") || quantity.equals("") || price.equals("")) {
+                                    listed = false;
                                 }
-                            } catch (Exception e) {
-                                send.println("n");
-                                send.flush();
+                                if (listed) {
+                                    send.println("y");
+                                    send.flush();
+                                } else {
+                                    send.println("n");
+                                    send.flush();
+                                }
                             }
+                        } catch (Exception e) {
+                            send.println("n");
+                            send.flush();
                         }
 
 
@@ -774,133 +694,121 @@ public class ServerConcurrent extends Thread {
                         String newDescription = receive.readLine();
                         String quantity = receive.readLine();
                         String price = receive.readLine();
-                        if (storeName == null || productName == null || newDescription == null
-                                || quantity == null || price == null || newStore == null || newName == null) {
 
-                        } else {
-                            try {
-                                synchronized (LOCK) {
-                                    int newQuantity = Integer.parseInt(quantity);
-                                    double newPrice = Double.parseDouble(price);
+                        try {
+                            synchronized (LOCK) {
+                                int newQuantity = Integer.parseInt(quantity);
+                                double newPrice = Double.parseDouble(price);
 
-                                    boolean confirmEdit = sell.editProduct(storeName, productName, newStore, newName, newDescription, newQuantity, newPrice);
-                                    if (storeName.equals("") || productName.equals("") || newStore.equals("") || newName.equals("") ||
-                                            newDescription.equals("") || quantity.equals("") || price.equals("")) {
-                                        confirmEdit = false;
-                                    }
-                                    if (confirmEdit) {
-                                        send.println("y");    //sender32
-                                        send.flush();
-                                    } else {
-                                        send.println("n");
-                                        send.flush();
-                                    }
+                                boolean confirmEdit = sell.editProduct(storeName, productName, newStore, newName, newDescription, newQuantity, newPrice);
+                                if (storeName.equals("") || productName.equals("") || newStore.equals("") || newName.equals("") ||
+                                        newDescription.equals("") || quantity.equals("") || price.equals("")) {
+                                    confirmEdit = false;
                                 }
-                            } catch (Exception e) {
-                                send.println("n");
-                                send.flush();
+                                if (confirmEdit) {
+                                    send.println("y");    //sender32
+                                    send.flush();
+                                } else {
+                                    send.println("n");
+                                    send.flush();
+                                }
                             }
+                        } catch (Exception e) {
+                            send.println("n");
+                            send.flush();
                         }
+
 
                     } else if (sellerResponse.equals(sellerOptions[4])) { //delete product
                         String storeName = receive.readLine();
                         String productName = receive.readLine();
                         // receiver 32
-                        if (storeName == null || productName == null) {
 
-                        } else {
 
-                            try {
-                                synchronized (LOCK) {
-                                    boolean delete = sell.deleteProduct(storeName, productName);        //sender 33
-                                    if (delete) {
-                                        String confirmDelete = "y";
-                                        send.println(confirmDelete);
-                                        send.flush();
-                                    } else {
-                                        String confirmDelete = "n";
-                                        send.println(confirmDelete);
-                                        send.flush();
-                                    }
+                        try {
+                            synchronized (LOCK) {
+                                boolean delete = sell.deleteProduct(storeName, productName);        //sender 33
+                                if (delete) {
+                                    String confirmDelete = "y";
+                                    send.println(confirmDelete);
+                                    send.flush();
+                                } else {
+                                    String confirmDelete = "n";
+                                    send.println(confirmDelete);
+                                    send.flush();
                                 }
-                            } catch (Exception e) {
-                                String confirmDelete = "n";
-                                send.println(confirmDelete);
-                                send.flush();
                             }
+                        } catch (Exception e) {
+                            String confirmDelete = "n";
+                            send.println(confirmDelete);
+                            send.flush();
                         }
+
 
                     } else if (sellerResponse.equals(sellerOptions[5])) { //import product file
                         String pathName = receive.readLine();
-                        if (pathName == null) {
 
-                        } else {
-                            try {
-                                synchronized (LOCK) {
-                                    boolean check = sell.importFile(pathName);
-                                    if (check) {
-                                        String confirm = "y";
-                                        send.println(confirm);
-                                        send.flush();
-                                    } else if (!check) {
-                                        String confirm = "n";
-                                        send.println(confirm);
-                                        send.flush();
-                                    }
+                        try {
+                            synchronized (LOCK) {
+                                boolean check = sell.importFile(pathName);
+                                if (check) {
+                                    String confirm = "y";
+                                    send.println(confirm);
+                                    send.flush();
+                                } else if (!check) {
+                                    String confirm = "n";
+                                    send.println(confirm);
+                                    send.flush();
                                 }
-                            } catch (Exception e) {
-                                String confirm = "n";
                             }
+                        } catch (Exception e) {
+                            String confirm = "n";
                         }
 
 
                     } else if (sellerResponse.equals(sellerOptions[6])) { //export
                         String pathName = receive.readLine(); //receiver pathName
-                        if (pathName == null) {
 
-                        } else {
-                            try {
-                                synchronized (LOCK) {
-                                    boolean check = sell.exportFile(pathName);
-                                    if (check) {
-                                        String confirm = "y";
-                                        send.println(confirm);
-                                        send.flush();
-                                    } else if (!check) {
-                                        String confirm = "n";
-                                        send.println(confirm);
-                                        send.flush();
-                                    }
+                        try {
+                            synchronized (LOCK) {
+                                boolean check = sell.exportFile(pathName);
+                                if (check) {
+                                    String confirm = "y";
+                                    send.println(confirm);
+                                    send.flush();
+                                } else if (!check) {
+                                    String confirm = "n";
+                                    send.println(confirm);
+                                    send.flush();
                                 }
-                            } catch (Exception e) {
-                                String confirm = "n";
-                                send.println(confirm);
-                                send.flush();
                             }
+                        } catch (Exception e) {
+                            String confirm = "n";
+                            send.println(confirm);
+                            send.flush();
                         }
+
 
                     } else if (sellerResponse.equals(sellerOptions[7])) { //log out
                         whileSelling = true;
                     } else if (sellerResponse.equalsIgnoreCase(sellerOptions[8])) { //store stats
                         String storeName = receive.readLine();
-                        if (storeName == null) {
 
-                        } else {
-                            try {
-                                synchronized (LOCK) {
-                                    ArrayList<String> log;
-                                    log = sell.sellerLog(storeName);
-                                    try {
-                                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                                        objectOutput.writeObject(log);
-                                    } catch (Exception e) {
-                                        String hitwo = "";
-                                    }
+                        try {
+                            synchronized (LOCK) {
+                                ArrayList<String> log;
+                                log = sell.sellerLog(storeName);
+                                try {
+                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                                    objectOutput.writeObject(log);
+                                } catch (Exception e) {
+                                    String hitwo = "";
                                 }
-                            } catch (Exception e) {
-                                String hi = "";
                             }
+                        } catch (Exception e) {
+                            String hi = "";
                         }
+
                     } else if (sellerResponse.equalsIgnoreCase(sellerOptions[9])) { //cart information
                         synchronized (LOCK) {
                             ArrayList<String> cartStats = sell.getSellerCart();//insertmethod
@@ -916,7 +824,7 @@ public class ServerConcurrent extends Thread {
 
 
         } catch (Exception e) {
-            e.printStackTrace();
+            return;
         }
     }
 
