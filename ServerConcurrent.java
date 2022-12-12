@@ -441,27 +441,27 @@ public class ServerConcurrent extends Thread {
                         whileBuying = true;
                     } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[7])) { //view product details
                         String storeName = receive.readLine();
-                        if (storeName != null) {
-                            String productName = receive.readLine();
 
-                            synchronized (LOCK) {
-                                String withDescription = buy.getFormattedProduct(productName, storeName);
-                                ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
-                                if (reviews.isEmpty()) {
-                                    send.println(withDescription);
-                                    send.flush();
-                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
-                                    objectOutput.writeObject(new ArrayList<String>());
-                                } else {
-                                    send.println(withDescription);
-                                    send.flush();
-                                    ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
-                                    objectOutput.writeObject(reviews);
-                                }
+                        String productName = receive.readLine();
+
+                        synchronized (LOCK) {
+                            String withDescription = buy.getFormattedProduct(productName, storeName);
+                            ArrayList<String> reviews = buy.reviewForSpecificProduct(storeName, productName);
+                            if (reviews.isEmpty()) {
+                                send.println(withDescription);
+                                send.flush();
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                                objectOutput.writeObject(new ArrayList<String>());
+                            } else {
+                                send.println(withDescription);
+                                send.flush();
+                                ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS reviews
+                                objectOutput.writeObject(reviews);
                             }
-
                         }
-                    } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) {
+
+
+                    } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[8])) { //search
                         String searchTerm = receive.readLine();
 
                         synchronized (LOCK) {
