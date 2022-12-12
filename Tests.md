@@ -10,7 +10,7 @@ Steps:
 
 Expected result: Application says the 'the account was created successfully!". 
 
-Test Status: 
+Test Status: Pass
 
 # Test 2: Create Product for Seller
 
@@ -30,7 +30,7 @@ Steps:
 
 Expected result: Application reads 'Product was created!'. 
 
-Test Status: 
+Test Status: Pass
 
 
 # Test 3: Edit Product for Seller
@@ -53,7 +53,7 @@ Steps:
 
 Expected result: Application reads "Product was editted".
 
-Test Satatus: 
+Test Satatus: Pass
 
 # Test 4: Delete Product for Seller
 
@@ -70,7 +70,7 @@ Steps:
 
 Expected result: Application reads "Product was successfully removed!"
 
-Test Status: 
+Test Status: Pass
 
 # Test 5: Edit Account For Buyer/Seller (Change Username)
 
@@ -89,7 +89,7 @@ Steps:
 
 Expected Result: Application reads "Username change successfully!".
 
-Test Status:  
+Test Status:  Pass
 
 # Test 6: Edit Account For Buyer/Seller (Change Password)
 
@@ -108,7 +108,7 @@ Steps:
 
 Expected Result: Application reads "Password change successfully!".
 
-Test Status: 
+Test Status: Pass
 
 # Test 7: Edit Account For Buyer/Seller (Change Email)
 
@@ -127,7 +127,7 @@ Steps:
 
 Expected Result: Application reads "Email change successfully!".
 
-Test Status:  
+Test Status:  Pass
 
 # Test 8: Delete Account for Buyer/Seller (
 
@@ -144,7 +144,7 @@ Steps:
 
 Expected Result: Application reads 'Account was deleted!".
 
-Test Status:
+Test Status: Pass
 
 # Test 9: Add and Remove Item From Cart
 
@@ -163,7 +163,7 @@ Steps:
 
 Expected Result: Application reads 'Item added to cart!".
 
-Test Status: 
+Test Status: Pass
 
 12. Select 'View, Purchase, Add/Remove Items From Cart'. 
 13. Select 'Remove Item From Cart'.
@@ -171,7 +171,7 @@ Test Status:
 
 Expected Result: Application reads 'Item remved from cart!'. 
 
-Test Status: 
+Test Status: Pass
 
 # Test 10: Leave a Review and View Product Details
 
@@ -189,7 +189,7 @@ Steps:
 
 Expected Result: Application reads 'Thank you for leaving a review!'. 
 
-Test Status:
+Test Status: Pass
 
 11. Select 'View a Product's Details'. 
 12. Enter the store name of the product. 
@@ -197,7 +197,7 @@ Test Status:
 
 Expected Result: Application that reads the product name, store name, seller username, product description, quantity avaliable, and the price with the respective values. Finally at the end, the review will pop up in a drop down of all the reviews with the buyer username and their comment.
 
-Test Status: 
+Test Status: Pass
 
 # Test 11: Logout 
 
@@ -212,7 +212,7 @@ Steps:
 
 Expected Result: Application reads 'Thank you for using Market!'. 
 
-Test Status: 
+Test Status: Pass
 
 # Test 12: View All Avaliable Products, Sort The Marketplace, and Search Products
 
@@ -225,28 +225,28 @@ Steps:
 
 Expected Result: Application reads the product name, store name, and the price with respective values. 
 
-Test Status:
+Test Status: Pass
 
 6. Select the 'Sort The Marketplace'.
 7. Select 'Price'. 
 
 Expected Result: Application reads the previous expected result but in the order of least to greatest price. 
 
-Test Status:
+Test Status: Pass
 
 8. Select the 'Sort The Marketplace'.
 9. Select 'Quantity'.
 
 Expected Result: Application reads the previous expected result but in the order of least to greatest quantity. 
 
-Test Status:
+Test Status: Pass
 
 10. Select 'Search'.
 11. Search key word of first product in quantity list.
 
 Expected Result: Application displays a drop down option that includes the product that was being referred to. 
 
-Test Status: 
+Test Status: Pass
 
 # Test 13: Purchasing Products, Inventory Changing, and Exporting Purchase History
 
@@ -261,7 +261,7 @@ Test Status:
 
 Expected result: Application reads product name, store name, seller username, product description, quanitity avaliable, and price with respective values. 
 
-Test Status:
+Test Status: Pass
 
 9. Select 'View, Purchase, Add/Remove Items From Cart'. 
 10. Select 'Add Item'.
@@ -269,30 +269,30 @@ Test Status:
 
 Expected Result: Application reads 'Item has been added to cart'. 
 
-Test Status: 
+Test Status: Pass
 
 12. Select 'View, Purchase, Add/Remove Items From Cart'. 
 13. Select 'Purchase'. 
 
 Expected Result: Application reads 'Thank you for your purchase'. 
 
-Test Status: 
+Test Status: Pass
 
 14. Select 'View Product Details'. 
 15. Enter store and product name.
 
 Expected Result: Quanitity avaliable for the product is the orginal quantity - the quantity purchased. 
 
-Test Status: 
+Test Status: Pass
 
 16. Select 'Export Purchase History'. 
 17. Enter a filepath that the user can acess. 
 
 Expected Result: Application reads 'File Was Exported!". 
 
-Test Status: 
+Test Status: Pass 
 
-# Test 14: View Store Statistics (Seller)
+# Test 14: View Store Statistics and View Cart Information  (Seller)
 
 Steps:
 1. Enter Purdue Marketplace.
@@ -304,9 +304,15 @@ Steps:
 7. Select 'View Store Statistics'. 
 8. Enter store name. 
 
-Expected Result: Application displays all the products avaliable in the store with their descriptions. 
+Expected Result: Application displays all the products that were purchased by customers. 
 
-Test Status: 
+Test Status: Pass
+
+9. Select 'View Cart Information'.
+
+Expected Result: Application should read "No products are in carts!"  if customers have no products in cart. Otherwise, application should display the products currently in customer carts.
+
+Test Status: Pass
 
 # Test 15: Import and Export File for Seller
 
@@ -322,11 +328,11 @@ Steps:
 
 Expected Result: Application reads 'File was successfully imported!'. 
 
-Test Status:
+Test Status: Pass
 
 9. Select 'Export File'.
 10. Enter a path name to export the file to. 
 
 Expected Result: Application reads 'File was sucessfully exported!'. 
 
-Test Status: 
+Test Status: Pass
