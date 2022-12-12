@@ -29,12 +29,12 @@ public class Server {
         server.startServer();
 
 
-
-
-
-
-
-
+//
+//
+//
+//
+//
+//
 //        String[] createLogIn = new String[2];
 //        createLogIn[0] = "Create new account";
 //        createLogIn[1] = "Log into existing account";

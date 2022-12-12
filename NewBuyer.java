@@ -28,7 +28,7 @@ public class NewBuyer extends NewProduct {
         for (int i = 0; i < products.size(); i++) {
             String[] product = products.get(i).split(",");
             if (product[1].equalsIgnoreCase(storeName) && product[2].equalsIgnoreCase(productName)
-                    && quantity < Integer.parseInt(product[4])) {
+                    && quantity < Integer.parseInt(product[4]) && quantity > 0) {
                 String cartLine = String.format("%s,%s,%s,%s,%d,%s,%s", product[0],
                         product[1], product[2], product[3], quantity, product[5], username);
                 cart.add(cartLine);
