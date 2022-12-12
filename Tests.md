@@ -130,3 +130,44 @@ Expected Result: Application reads "Email change successfully!".
 Test Status:  
 
 # Test 8: Delete Account for Buyer/Seller (
+
+Steps: 
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Confirms the user is logged in with message "Log in Successful!".
+6. Confirms the user is either a seller or buyer and says "Welcome Seller!" or "Welcome Buyer!"
+7. Chose 'Delete Account'. 
+8. Enter username credential.
+9. Enter password credential.
+
+Expected Result: Application reads 'Account was deleted!".
+
+Test Status:
+
+# Test 9: Add and Remove Item From Cart
+
+Steps: 
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Confirms the user is logged in with message "Log in Successful!".
+6. Confirms the user is either a buyer and says "Welcome Buyer!"
+7. Select 'View, Purchase, Add/Remove Items From Cart'. 
+8. Select 'Add Item to Cart'. 
+9. Enter store name that carries product. 
+10. Enter product name. 
+11. Enter quantity of product user wants to purchase. 
+
+Expected Result: Application reads 'Item added to cart!".
+Test Status: 
+
+12. Select 'View, Purchase, Add/Remove Items From Cart'. 
+13. Select 'Remove Item From Cart'.
+14. Select the item that wants to be removed. 
+
+Expected Result: Application reads 'Item remved from cart!'. 
+Test Status: 
+
