@@ -2,7 +2,7 @@
 
 Compile and run this project by running the Server class, then the Client class, in IntelliJ or another Jave IDE.
 
-Report submitted by Amit Manchella, Repository submitted by Ethan Whiteman
+Report submitted by Amit Manchella, Repository and presentation submitted by Ethan Whiteman
 
 # Classes:
 
