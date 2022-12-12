@@ -834,7 +834,6 @@ public class ServerConcurrent extends Thread {
                 Socket socket = serverSocket.accept();
                 ServerConcurrent sc = new ServerConcurrent(socket);
                 sc.start();
-                sc.join();
             } catch (Exception e) {
                 e.printStackTrace();
             }
