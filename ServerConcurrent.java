@@ -505,9 +505,17 @@ public class ServerConcurrent extends Thread {
 
                         } else {
                             synchronized (LOCK) {
-                                ArrayList<String> results = buy.searchProduct(searchTerm);
                                 ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
-                                objectOutput.writeObject(results);
+                                ArrayList<String> results = buy.searchProduct(searchTerm);
+                                String moveOn = "";
+                                if (results.isEmpty()) {
+                                    moveOn = "n";
+                                    objectOutput.writeObject(moveOn);
+                                } else {
+                                    moveOn = "y";
+                                    objectOutput.writeObject(moveOn);
+                                    objectOutput.writeObject(results);
+                                }
                             }
                         }
 
