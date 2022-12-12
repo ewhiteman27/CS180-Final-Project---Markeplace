@@ -125,7 +125,7 @@ public class ServerConcurrent extends Thread {
             //???????????????????????????????????????????????????????????????????????????????????????????????
             if (userAccountType.equalsIgnoreCase("1")) {  //If user is a buyer
                 NewBuyer buy = new NewBuyer(edits.getUsername()); //gives access to buyer methods
-                String[] buyerOptions = new String[10];
+                String[] buyerOptions = new String[11];
                 buyerOptions[0] = "View All Available Products"; //done
                 buyerOptions[1] = "Sort The Marketplace"; //framed
                 buyerOptions[2] = "Edit Account"; //done
@@ -136,6 +136,7 @@ public class ServerConcurrent extends Thread {
                 buyerOptions[7] = "View a Product's Details"; //done
                 buyerOptions[8] = "Search"; //done
                 buyerOptions[9] = "Leave a Review";
+                buyerOptions[10] = "View reviews of a product";
                 boolean whileBuying = false;
 
 
@@ -373,6 +374,7 @@ public class ServerConcurrent extends Thread {
                                 try {
                                     ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
                                     objectOutput.writeObject(cart);
+                                    objectOutput.flush();
                                 } catch (Exception e) {
                                     String n = "n";
                                 }
@@ -504,6 +506,14 @@ public class ServerConcurrent extends Thread {
                         }
 
 
+                    } else if (buyerFirstResponse.equalsIgnoreCase(buyerOptions[10])) {
+                        String storeName = receive.readLine();
+                        String productName = receive.readLine();
+                        ArrayList<String> reviews = new ArrayList<>();
+                        reviews = buy.reviewForSpecificProduct(storeName, productName);
+                        ObjectOutputStream objectOutput = new ObjectOutputStream(socket.getOutputStream());  //OOS 1
+                        objectOutput.writeObject(reviews);
+                        objectOutput.flush();
                     }
 
                 } while (whileBuying == false);
