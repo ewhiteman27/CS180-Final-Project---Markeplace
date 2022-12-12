@@ -439,30 +439,23 @@ public class Client {
                             send.println(productName);
                             send.flush();
                             String confirm = receive.readLine(); //confirm details
-                            if (!confirm.equalsIgnoreCase("Product not found")) {
-                                String finalConfirm = confirm.replaceAll(";", "\n");
-                                if (!finalConfirm.equalsIgnoreCase("Product not found")) {
-
-
-                                    ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
-                                    Object object = oi.readObject();
-                                    ArrayList<String> temp = (ArrayList<String>) object;
-                                    ArrayList<String> searchReviews = new ArrayList<>();
-                                    searchReviews.addAll(temp);
-                                    String[] completeList = new String[searchReviews.size()];
-                                    searchReviews.toArray(completeList);
-                                    if (searchReviews.isEmpty()) {
-                                        JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
-
-                                    } else {
-                                        String trash = (String) JOptionPane.showInputDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
-                                    }
-                                } else {
+                            String finalConfirm = confirm.replaceAll(";", "\n"); //formatted desc
+                            if (!finalConfirm.equalsIgnoreCase("Product not found")) {
+                                ObjectInputStream oi = new ObjectInputStream(socket.getInputStream());
+                                Object object = oi.readObject();
+                                ArrayList<String> temp = (ArrayList<String>) object;
+                                ArrayList<String> searchReviews = new ArrayList<>();
+                                searchReviews.addAll(temp);
+                                if (searchReviews.isEmpty()) {
                                     JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
+                                } else {
+                                    String[] completeList = new String[searchReviews.size()];
+                                    searchReviews.toArray(completeList);
+                                    String trash = (String) JOptionPane.showInputDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE, null, completeList, completeList[0]);
                                 }
                             } else {
-                                JOptionPane.showMessageDialog(null, "Product not found!", "Market", JOptionPane.INFORMATION_MESSAGE);
+                                JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
                             }
 
@@ -509,7 +502,7 @@ public class Client {
 
 
                         }
-                    } while (whileBuying == false);
+                    } while (!whileBuying);
 
 
                 }  //END OF BUYER
