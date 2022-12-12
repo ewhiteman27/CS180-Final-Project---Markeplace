@@ -173,7 +173,7 @@ public class NewProduct {
         for (int i = 0; i < cart.size(); i++) {
             String[] product = cart.get(i).split(",");
             formattedCart.add(String.format("Buyer: %s, Product Name: %s, Store: %s," +
-                    " Price: %s", product[6], product[2], product[1], product[5]));
+                    " Price: %s, Quantity: %s", product[6], product[2], product[1], product[5], product[4]));
         }
         return formattedCart;
     }

@@ -245,7 +245,7 @@ public class NewBuyer extends NewProduct {
                 buyerCart.add(cart.get(i));
             }
         }
-        return buyerCart;
+        return formatCartItems(buyerCart);
     }
     public void reviewProducts(String storeName, String productName, String writtenReview) throws IOException {
         /**
