@@ -212,7 +212,7 @@ Expected Result: Application reads 'Thank you for using Market!'.
 
 Test Status: 
 
-# Test 12: View All Avaliable Products and Sort The Marketplace
+# Test 12: View All Avaliable Products, Sort The Marketplace, and Search Products
 
 Steps: 
 1. Enter Purdue Marketplace.
@@ -239,4 +239,47 @@ Expected Result: Application reads the previous expected result but in the order
 
 Test Status:
 
+10. Select 'Search'.
+11. Search key word of first product in quantity list.
+
+Expected Result: Application displays a drop down option that includes the product that was being referred to. 
+
+Test Status: 
+
+# Test 13: Purchasing Products and Inventory Changing Accordingly
+
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Select 'View All Avaliable Products'.
+6. Chose a product to purchase. 
+7. Select 'View a Product's Details'. 
+8. Enter the details of the product that will be purchased. 
+
+Expected result: Application reads product name, store name, seller username, product description, quanitity avaliable, and price with respective values. 
+
+Test Status:
+
+9. Select 'View, Purchase, Add/Remove Items From Cart'. 
+10. Select 'Add Item'.
+11. Enter product and store name, and quantity of product being purchased. 
+
+Expected Result: Application reads 'Item has been added to cart'. 
+
+Test Status: 
+
+12. Select 'View, Purchase, Add/Remove Items From Cart'. 
+13. Select 'Purchase'. 
+
+Expected Result: Application reads 'Thank you for your purchase'. 
+
+Test Status: 
+
+14. Select 'View Product Details'. 
+15. Enter store and product name.
+
+Expected Result: Quanitity avaliable for the product is the orginal quantity - the quantity purchased. 
+
+Test Status: 
 
