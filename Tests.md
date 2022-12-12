@@ -307,3 +307,26 @@ Steps:
 Expected Result: Application displays all the products avaliable in the store with their descriptions. 
 
 Test Status: 
+
+# Test 15: Import and Export File for Seller
+
+Steps: 
+1. Enter Purdue Marketplace.
+2. Chose 'Log in Into Existing Account' option.
+3. Enter username credential.
+4. Enter password credential. 
+5. Confirms the user is logged in with message "Log in Successful!".
+6. Confirms the user is a seller and says "Welcome Seller!"
+7. Select 'Import Product File'. 
+8.  Enter a filename that include content that can be imported. 
+
+Expected Result: Application reads 'File was successfully imported!'. 
+
+Test Status:
+
+9. Select 'Export File'.
+10. Enter a path name to export the file to. 
+
+Expected Result: Application reads 'File was sucessfully exported!'. 
+
+Test Status: 
