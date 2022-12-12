@@ -162,6 +162,7 @@ Steps:
 11. Enter quantity of product user wants to purchase. 
 
 Expected Result: Application reads 'Item added to cart!".
+
 Test Status: 
 
 12. Select 'View, Purchase, Add/Remove Items From Cart'. 
@@ -169,5 +170,6 @@ Test Status:
 14. Select the item that wants to be removed. 
 
 Expected Result: Application reads 'Item remved from cart!'. 
+
 Test Status: 
 
