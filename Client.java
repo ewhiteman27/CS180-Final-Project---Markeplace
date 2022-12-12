@@ -31,7 +31,7 @@ public class Client {
         boolean startMenu = true;
         try {
             while (startMenu) {
-                JOptionPane.showMessageDialog(null, "Welcome to the Purdue Marketplace!", "Market", JOptionPane.OK_OPTION);
+                JOptionPane.showMessageDialog(null, "Welcome to the Purdue Marketplace!", "Market", JOptionPane.INFORMATION_MESSAGE);
                 choice = (String) JOptionPane.showInputDialog(null,
                         "Please select one of the available options", "Market",
                         JOptionPane.QUESTION_MESSAGE, null, createLogIn, createLogIn[0]);
@@ -445,8 +445,9 @@ public class Client {
                                 Object object = oi.readObject();
                                 ArrayList<String> temp = (ArrayList<String>) object;
                                 ArrayList<String> searchReviews = new ArrayList<>();
+                                searchReviews.add("Reviews");
                                 searchReviews.addAll(temp);
-                                if (searchReviews.isEmpty()) {
+                                if (searchReviews.size() == 1) {
                                     JOptionPane.showMessageDialog(null, finalConfirm, "Market", JOptionPane.INFORMATION_MESSAGE);
 
                                 } else {
@@ -791,12 +792,18 @@ public class Client {
                             ArrayList<String> cartStats = new ArrayList<>();
 
 
+
                             cartStats.addAll(temp);
-                            String[] finalStats = new String[cartStats.size()];
-                            cartStats.toArray(finalStats);
+                            if (cartStats.isEmpty()) {
+                                JOptionPane.showMessageDialog(null, "No products are in carts!", "Market", JOptionPane.INFORMATION_MESSAGE);
+
+                            } else {
+                                String[] finalStats = new String[cartStats.size()];
+                                cartStats.toArray(finalStats);
 
 
-                            String selectNull = (String) JOptionPane.showInputDialog(null, "Statistics", "Market", JOptionPane.INFORMATION_MESSAGE, null, finalStats, finalStats[0]);
+                                String selectNull = (String) JOptionPane.showInputDialog(null, "Statistics", "Market", JOptionPane.INFORMATION_MESSAGE, null, finalStats, finalStats[0]);
+                            }
                         }
 
                     } while (whileSelling == false);
